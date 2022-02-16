@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Square extends JButton{
     Integer y;
@@ -12,6 +13,17 @@ public class Square extends JButton{
     String activating_square;
     Color original_color;
     Square activating_Square_;
+    String piece_color = piece_color_func(this.getText());
+
+    static String piece_color_func(String val) {
+        if (val == "\u2659 " || val=="\u2654 " || val=="\u2655 " || val=="\u2656 " || val=="\u2657 " || val=="\u2658 ") {
+            return "White";
+        }
+        else if(val == "\u265F " || val == "\u265A " || val =="\u265B " || val =="\u265C " || val =="\u265D " || val == "\u265E ") {
+            return "Black";
+        }
+        else {return null;}
+    }
 
     public void blank(Square[][] myarray) {
 
@@ -24,60 +36,108 @@ public class Square extends JButton{
         }}}
         else {System.out.println("pink");
         this.setText(this.activating_piece);
+        System.out.println("text is");
+        System.out.println(myarray[this.y][this.x].getText());
+        this.piece_color=piece_color_func(this.getText());
         this.setBackground(this.original_color);
         System.out.println(this.activating_Square_.alge_notation);
         this.activating_Square_.setText(null);
-//            for (int i = 0; i < 8; i++) {
-//                for (int j = 0; j < 8; j++) {
-//                    if(myarray[i][j].activating_square !=null) {
-//                        myarray[i][j].setText(null);
-//                        myarray[i][j].activating_square=null;
-//
-//                }}}
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    myarray[i][j].setBackground(myarray[i][j].original_color);
+
+                }}
+
         }
     }
 
     public void white_pawn(Square[][] myarray) {
 
         System.out.println("white pawn");
-        if (this.alge_notation.contains("2")) {
-            Integer orig_x = this.x;
-            Integer orig_y = this.y;
-            System.out.println(this.x);
-            System.out.println(this.y);
-            System.out.println(this.alge_notation);
-            String value = this.alge_notation;
+        System.out.println(this.piece_color);
+        Integer orig_x = this.x;
+        Integer orig_y = this.y;
+        System.out.println(this.x);
+        System.out.println(this.y);
+        System.out.println(this.alge_notation);
+        String value = this.alge_notation;
+        for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+            if (this.x -1>=0 && (myarray[i][this.x-1].piece_color=="Black")) {
+                myarray[i][this.x-1].setBackground(Color.pink);
+                myarray[i][this.x-1].activating_piece="\u2659 ";
+                myarray[i][this.x-1].activating_Square_=myarray[orig_y][orig_x];
 
+            }
+        }
+        for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+            if (this.x +1<=8 && (myarray[i][this.x+1].piece_color=="Black")) {
+                myarray[i][this.x+1].setBackground(Color.pink);
+                myarray[i][this.x+1].activating_piece="\u2659 ";
+                myarray[i][this.x+1].activating_Square_=myarray[orig_y][orig_x];
+            }
+        }
+        if (this.alge_notation.contains("2")) {
             for (int i = this.y+1; i <= this.y+2; i = i + 1) {
                 myarray[i][this.x].setBackground(Color.pink);
                 myarray[i][this.x].activating_piece="\u2659 ";
                 //myarray[i][this.x].activating_square=this.alge_notation;
                 myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
                 System.out.println(myarray[i][this.x].activating_Square_.alge_notation);
-
-
             }
-
+        }
+        else {
+            for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+                myarray[i][this.x].setBackground(Color.pink);
+                myarray[i][this.x].activating_piece="\u2659 ";
+                //myarray[i][this.x].activating_square=this.alge_notation;
+                myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
+                System.out.println(myarray[i][this.x].activating_Square_.alge_notation);
+            }
 
         }
 
     }
 
     public void black_pawn(Square[][] myarray) {
-        System.out.println("black pawn");
+        if (this.getBackground()!=Color.pink) {{
+
+        System.out.println(this.piece_color);
+
+        System.out.println("black pawn");}}
+
+        else{{System.out.println("pink");
+            this.setText(this.activating_piece);
+            System.out.println("text is");
+            System.out.println(myarray[this.y][this.x].getText());
+            this.piece_color=piece_color_func(this.getText());
+            this.setBackground(this.original_color);
+            System.out.println(this.activating_Square_.alge_notation);
+            this.activating_Square_.setText(null);
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    myarray[i][j].setBackground(myarray[i][j].original_color);
+
+                }}}
+
+        }
+
+
     }
 
 
     public void outp(Square[][] myarray) {
         if (this.getText() == null){
             this.blank(myarray);}
-        else if(this.getText() == "\u2659") {
+        else if(Objects.equals(this.getText(), "\u2659 ")) {
             this.white_pawn(myarray);
         }
-        else if(this.getText() == "\u265F") {
+        else if(Objects.equals(this.getText(), "\u265F ")) {
             this.black_pawn(myarray);
         }
-        else {System.out.println("bad luck");}
+        else {System.out.println("bad luck");
+        System.out.println(this.piece_color);
+        System.out.println(this.getText());
+        if (this.getText() == "\u2659 ") {System.out.println("yes equal why not working");}}
     }
 
     static HashMap<String,String> starting_positions() {
@@ -92,38 +152,38 @@ public class Square extends JButton{
                 starting_layout.put(notation,null);
             }
         }
-        starting_layout.put("A1","\u2656");
-        starting_layout.put("B1","\u2658");
-        starting_layout.put("C1","\u2657");
-        starting_layout.put("D1","\u2655");
-        starting_layout.put("E1","\u2654");
-        starting_layout.put("F1","\u2657");
-        starting_layout.put("G1","\u2658");
-        starting_layout.put("H1","\u2656");
-        starting_layout.put("A2","\u2659");
-        starting_layout.put("B2","\u2659");
-        starting_layout.put("C2","\u2659");
-        starting_layout.put("D2","\u2659");
-        starting_layout.put("E2","\u2659");
-        starting_layout.put("F2","\u2659");
-        starting_layout.put("G2","\u2659");
-        starting_layout.put("H2","\u2659");
-        starting_layout.put("A7","\u265F");
-        starting_layout.put("B7","\u265F");
-        starting_layout.put("C7","\u265F");
-        starting_layout.put("D7","\u265F");
-        starting_layout.put("E7","\u265F");
-        starting_layout.put("F7","\u265F");
-        starting_layout.put("G7","\u265F");
-        starting_layout.put("H7","\u265F");
-        starting_layout.put("A8","\u265C");
-        starting_layout.put("B8","\u265E");
-        starting_layout.put("C8","\u265D");
-        starting_layout.put("D8","\u265B");
-        starting_layout.put("E8","\u265A");
-        starting_layout.put("F8","\u265D");
-        starting_layout.put("G8","\u265E");
-        starting_layout.put("H8","\u265C");
+        starting_layout.put("A1","\u2656 ");
+        starting_layout.put("B1","\u2658 ");
+        starting_layout.put("C1","\u2657 ");
+        starting_layout.put("D1","\u2655 ");
+        starting_layout.put("E1","\u2654 ");
+        starting_layout.put("F1","\u2657 ");
+        starting_layout.put("G1","\u2658 ");
+        starting_layout.put("H1","\u2656 ");
+        starting_layout.put("A2","\u2659 ");
+        starting_layout.put("B2","\u2659 ");
+        starting_layout.put("C2","\u2659 ");
+        starting_layout.put("D2","\u2659 ");
+        starting_layout.put("E2","\u2659 ");
+        starting_layout.put("F2","\u2659 ");
+        starting_layout.put("G2","\u2659 ");
+        starting_layout.put("H2","\u2659 ");
+        starting_layout.put("A7","\u265F ");
+        starting_layout.put("B7","\u265F ");
+        starting_layout.put("C7","\u265F ");
+        starting_layout.put("D7","\u265F ");
+        starting_layout.put("E7","\u265F ");
+        starting_layout.put("F7","\u265F ");
+        starting_layout.put("G7","\u265F ");
+        starting_layout.put("H7","\u265F ");
+        starting_layout.put("A8","\u265C ");
+        starting_layout.put("B8","\u265E ");
+        starting_layout.put("C8","\u265D ");
+        starting_layout.put("D8","\u265B ");
+        starting_layout.put("E8","\u265A ");
+        starting_layout.put("F8","\u265D ");
+        starting_layout.put("G8","\u265E ");
+        starting_layout.put("H8","\u265C ");
         return starting_layout;
     }
 

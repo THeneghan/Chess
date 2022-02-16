@@ -86,6 +86,8 @@ public class Viewer {
                 String key = myarray[i][j].alge_notation;
                 String chess_piece =starting_board.get(key);
                 myarray[i][j].setText(chess_piece);
+                myarray[i][j].piece_color=Square.piece_color_func(myarray[i][j].getText());
+
 
             }
         }

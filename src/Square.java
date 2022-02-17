@@ -16,10 +16,12 @@ public class Square extends JButton{
     String piece_color = piece_color_func(this.getText());
 
     static String piece_color_func(String val) {
-        if (val == "\u2659 " || val=="\u2654 " || val=="\u2655 " || val=="\u2656 " || val=="\u2657 " || val=="\u2658 ") {
+        if (Objects.equals(val, "\u2659 ") || Objects.equals(val, "\u2654 ") || Objects.equals(val, "\u2655 ")
+                || Objects.equals(val, "\u2656 ") || Objects.equals(val, "\u2657 ") || Objects.equals(val, "\u2658 ")) {
             return "White";
         }
-        else if(val == "\u265F " || val == "\u265A " || val =="\u265B " || val =="\u265C " || val =="\u265D " || val == "\u265E ") {
+        else if(Objects.equals(val, "\u265F ") || Objects.equals(val, "\u265A ") || Objects.equals(val, "\u265B ")
+                || Objects.equals(val, "\u265C ") || Objects.equals(val, "\u265D ") || Objects.equals(val, "\u265E ")) {
             return "Black";
         }
         else {return null;}
@@ -62,6 +64,7 @@ public class Square extends JButton{
         System.out.println(this.alge_notation);
         String value = this.alge_notation;
         for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+
             if (this.x -1>=0 && (myarray[i][this.x-1].piece_color=="Black")) {
                 myarray[i][this.x-1].setBackground(Color.pink);
                 myarray[i][this.x-1].activating_piece="\u2659 ";
@@ -78,24 +81,47 @@ public class Square extends JButton{
         }
         if (this.alge_notation.contains("2")) {
             for (int i = this.y+1; i <= this.y+2; i = i + 1) {
+                if (myarray[i][this.x].piece_color!="Black") {
                 myarray[i][this.x].setBackground(Color.pink);
                 myarray[i][this.x].activating_piece="\u2659 ";
                 //myarray[i][this.x].activating_square=this.alge_notation;
                 myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                System.out.println(myarray[i][this.x].activating_Square_.alge_notation);
+                System.out.println(myarray[i][this.x].activating_Square_.alge_notation);}
             }
         }
         else {
             for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+                if (myarray[i][this.x].piece_color!="Black") {
                 myarray[i][this.x].setBackground(Color.pink);
                 myarray[i][this.x].activating_piece="\u2659 ";
                 //myarray[i][this.x].activating_square=this.alge_notation;
                 myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                System.out.println(myarray[i][this.x].activating_Square_.alge_notation);
+                System.out.println(myarray[i][this.x].activating_Square_.alge_notation);}
             }
 
         }
 
+    }
+
+    public void white_bishop(Square[][] myarray) {
+
+        Integer orig_x = this.x;
+        Integer orig_y = this.y;
+        System.out.println("White bishop");
+        for (int i = 1; i <= 8; i = i + 1) {
+            Integer less_than_8y=orig_y+i;
+            Integer less_than_8x=orig_x+i;
+            Integer more_than_0y = orig_y-i;
+            Integer more_than_0x = orig_x-i;
+            if (less_than_8y < 8 && less_than_8x <8){
+            myarray[orig_y+i][orig_x+i].setBackground(Color.pink);}
+            if (less_than_8y < 8 && more_than_0x >=0){
+                myarray[orig_y+i][orig_x-i].setBackground(Color.pink);}
+
+
+
+
+        }
     }
 
     public void black_pawn(Square[][] myarray) {
@@ -121,7 +147,6 @@ public class Square extends JButton{
 
         }
 
-
     }
 
 
@@ -131,9 +156,13 @@ public class Square extends JButton{
         else if(Objects.equals(this.getText(), "\u2659 ")) {
             this.white_pawn(myarray);
         }
+        else if(Objects.equals(this.getText(), "\u2657 ")) {
+            this.white_bishop(myarray);
+        }
         else if(Objects.equals(this.getText(), "\u265F ")) {
             this.black_pawn(myarray);
         }
+
         else {System.out.println("bad luck");
         System.out.println(this.piece_color);
         System.out.println(this.getText());

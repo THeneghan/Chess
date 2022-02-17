@@ -28,7 +28,7 @@ public class Square extends JButton{
     }
 
     public void blank(Square[][] myarray) {
-
+        System.out.println(this.piece_color);
         if (this.getBackground()!=Color.pink) {
                 System.out.println("blank");
                 for (int i = 0; i < 8; i++) {
@@ -44,6 +44,7 @@ public class Square extends JButton{
         this.setBackground(this.original_color);
         System.out.println(this.activating_Square_.alge_notation);
         this.activating_Square_.setText(null);
+        this.activating_Square_.piece_color=null;
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -114,8 +115,11 @@ public class Square extends JButton{
             Integer more_than_0y = orig_y-i;
             Integer more_than_0x = orig_x-i;
             if (less_than_8y < 8 && less_than_8x <8){
+                if (myarray[orig_y+i][orig_x+i].piece_color!=null) {break;}
             myarray[orig_y+i][orig_x+i].setBackground(Color.pink);}
+            //separate out into two for loops
             if (less_than_8y < 8 && more_than_0x >=0){
+                if (myarray[orig_y+i][orig_x-i].piece_color!=null) {break;}
                 myarray[orig_y+i][orig_x-i].setBackground(Color.pink);}
 
 

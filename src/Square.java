@@ -40,7 +40,10 @@ public class Square extends JButton{
                         myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
 
 
-                    }}}
+
+                    }}
+        //Do king sniff here
+        }
         else {System.out.println("pink");
         this.setText(this.activating_piece);
         System.out.println("text is");
@@ -318,6 +321,57 @@ public class Square extends JButton{
     }
 
     public void white_knight (Square[][] myarray) {
+        Integer orig_x = this.x;
+        Integer orig_y = this.y;
+        System.out.println("white knight");
+        if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!="White") {
+            myarray[orig_y+2][orig_x+1].setBackground(Color.pink);
+            myarray[orig_y+2][orig_x+1].activating_piece="\u2658 ";
+            myarray[orig_y+2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y+2 <= 7 && orig_x-1 >= 0 && myarray[orig_y+2][orig_x-1].piece_color!= "White" ) {
+            myarray[orig_y+2][orig_x-1].setBackground(Color.pink);
+            myarray[orig_y+2][orig_x-1].activating_piece="\u2658 ";
+            myarray[orig_y+2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y-2 >= 0 && orig_x+1 <= 7 && myarray[orig_y-2][orig_x+1].piece_color!="White") {
+            myarray[orig_y-2][orig_x+1].setBackground(Color.pink);
+            myarray[orig_y-2][orig_x+1].activating_piece="\u2658 ";
+            myarray[orig_y-2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y-2 >= 0 && orig_x-1 >= 0 && myarray[orig_y-2][orig_x-1].piece_color!="White") {
+            myarray[orig_y-2][orig_x-1].setBackground(Color.pink);
+            myarray[orig_y-2][orig_x-1].activating_piece="\u2658 ";
+            myarray[orig_y-2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y+1 <= 7 && orig_x+2 <= 7 && myarray[orig_y+1][orig_x+2].piece_color!="White") {
+            myarray[orig_y+1][orig_x+2].setBackground(Color.pink);
+            myarray[orig_y+1][orig_x+2].activating_piece="\u2658 ";
+            myarray[orig_y+1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y-1 >= 0 && orig_x+2 <= 7 && myarray[orig_y-1][orig_x+2].piece_color!="White") {
+            myarray[orig_y-1][orig_x+2].setBackground(Color.pink);
+            myarray[orig_y-1][orig_x+2].activating_piece="\u2658 ";
+            myarray[orig_y-1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y+1 <= 7 && orig_x-2 >= 0 && myarray[orig_y+1][orig_x-2].piece_color!="White") {
+            myarray[orig_y+1][orig_x-2].setBackground(Color.pink);
+            myarray[orig_y+1][orig_x-2].activating_piece="\u2658 ";
+            myarray[orig_y+1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
+        if (orig_y-1 >= 0 && orig_x-2 >= 0 && myarray[orig_y-1][orig_x-2].piece_color!="White") {
+            myarray[orig_y-1][orig_x-2].setBackground(Color.pink);
+            myarray[orig_y-1][orig_x-2].activating_piece="\u2658 ";
+            myarray[orig_y-1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
+            myarray[orig_y-1][orig_x-2].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+        }
 
     }
 

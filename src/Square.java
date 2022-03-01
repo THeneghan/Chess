@@ -720,9 +720,62 @@ public class Square extends JButton{
     public void black_pawn(Square[][] myarray) {
         if (this.getBackground()!=Color.pink) {
 
-        System.out.println(this.piece_color);
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    myarray[i][j].setBackground(myarray[i][j].original_color);
+                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
 
-        System.out.println("black pawn");}
+                }}
+
+            System.out.println("black pawn");
+            System.out.println(this.piece_color);
+            Integer orig_x = this.x;
+            Integer orig_y = this.y;
+            System.out.println(this.x);
+            System.out.println(this.y);
+            System.out.println(this.alge_notation);
+            String value = this.alge_notation;
+            for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+
+                if (this.x -1>=0 && (myarray[i][this.x-1].piece_color=="Black")) {
+                    myarray[i][this.x-1].setBackground(Color.pink);
+                    myarray[i][this.x-1].activating_piece="\u2659 ";
+                    myarray[i][this.x-1].activating_Square_=myarray[orig_y][orig_x];
+
+                }
+            }
+            for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+                if (this.x +1<8 && (myarray[i][this.x+1].piece_color=="Black")) {
+                    myarray[i][this.x+1].setBackground(Color.pink);
+                    myarray[i][this.x+1].activating_piece="\u2659 ";
+                    myarray[i][this.x+1].activating_Square_=myarray[orig_y][orig_x];
+                }
+            }
+            if (this.alge_notation.contains("2")) {
+                for (int i = this.y+1; i <= this.y+2; i = i + 1) {
+                    if (myarray[i][this.x].piece_color!="Black") {
+                        myarray[i][this.x].setBackground(Color.pink);
+                        myarray[i][this.x].activating_piece="\u2659 ";
+                        //myarray[i][this.x].activating_square=this.alge_notation;
+                        myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
+                        System.out.println(myarray[i][this.x].activating_Square_.alge_notation);}
+                }
+            }
+            else {
+                for (int i = this.y+1; i <= this.y+1; i = i + 1) {
+                    if (myarray[i][this.x].piece_color!="Black") {
+                        myarray[i][this.x].setBackground(Color.pink);
+                        myarray[i][this.x].activating_piece="\u2659 ";
+                        //myarray[i][this.x].activating_square=this.alge_notation;
+                        myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
+                        System.out.println(myarray[i][this.x].activating_Square_.alge_notation);}
+                }
+
+            }
+
+        }
+
+
 
         else{System.out.println("pink");
             this.setText(this.activating_piece);
@@ -741,7 +794,7 @@ public class Square extends JButton{
                 }}
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
+                    //white_check(myarray,myarray[i][j]);
 
                 }}
 

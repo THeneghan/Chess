@@ -48,8 +48,6 @@ public class Viewer {
                 Integer int_sum = int1 + number;
                 String string_number = number.toString();
                 String notation = letter + string_number;
-                System.out.println(notation);
-                System.out.println(y_coord.toString() + " " + x_coord.toString());
                 if (int_sum %2 ==0) {
                     Square square = new Square(null,Color.WHITE, y_coord, x_coord, notation);
                     square.original_color= Color.WHITE;
@@ -68,7 +66,6 @@ public class Viewer {
                     square.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println("this");
                             square.outp(myarray);
                         }
                     });

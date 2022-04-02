@@ -52,6 +52,9 @@ public class Square extends JButton{
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
                 myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
+                myarray[i][j].activating_piece=null;
+                myarray[i][j].activating_Square_=null;
+
             }}
 
     }
@@ -591,56 +594,69 @@ public class Square extends JButton{
 
 
     public void checkmate(Square[][] myarray) {
-        Integer count=0;
-        Integer count1=0;
+        //Creates virtual array
+        int black_moves_count=0;
+        int checkmate_counter=0;
         VirtualSquare[][] virtualarray = new VirtualSquare[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Square val = myarray[i][j];
                 VirtualSquare virt_square = new VirtualSquare(val.y,val.x, val.alge_notation,val.activating_piece,val.original_color,val.getText(),val.getBackground());
                 virtualarray[i][j] = virt_square;
-            }}
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (virtualarray[i][j].piece_color=="Black"){
-                    //System.out.println(virtualarray[i][j].Text);
-                    //System.out.println(virtualarray[i][j].alge_notation);
-                    Integer count3=0;
-                    VirtualSquare[][] copy_virtualarray = virtualarray.clone();
-                    VirtualSquare.activate_black_piece_virtual(copy_virtualarray,copy_virtualarray[i][j]);
-                    for (int i1 = 0; i1 < 8; i1++) {
-                        for (int j1 = 0; j1 < 8; j1++) {
-                            if (copy_virtualarray[i1][j1].Background==Color.pink) {
-                                //System.out.println(copy_virtualarray[i1][j1].activating_Square_);
-                                count3=count3+1;
-                                VirtualSquare[][] copy_copy_myarray = copy_virtualarray.clone();
-                                //System.out.println(copy_copy_myarray[i1][j1].activating_Square_);
-                                VirtualSquare.pink_square2(copy_copy_myarray, i1,j1);
-                                //all pieces should now be black and white
-                                for (int i2 = 0; i2 < 8; i2++) {
-                                    for (int j2 = 0; j2 < 8; j2++) {
-                                        System.out.println(copy_copy_myarray[i2][j2].alge_notation);
-                                        System.out.println(copy_copy_myarray[i2][j2].Background);
-                                        System.out.println(copy_copy_myarray[i2][j2].activating_piece);
-                                        System.out.println(copy_copy_myarray[i2][j2].piece_color);
-
-
-
-
-                                    }}
-
-                                //System.out.println(copy_copy_myarray[i1][j1].activating_Square_);
-
-                                //VirtualSquare.check(copy_copy_myarray, copy_copy_myarray[i1][j1]);
-                            }
-                        }
-                    }
-                    System.out.println(count3);
-                    count = count+count3;
-                }
             }
         }
-        System.out.println(count);
+        //Virtual array initialised
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (virtualarray[i][j].piece_color=="Black") {
+                    VirtualSquare.outp(virtualarray,virtualarray[i][j]);
+                    //All black pieces activated
+                    for (int i1 = 0; i1 < 8; i1++) {
+                        for (int j1 = 0; j1 < 8; j1++) {
+                            if (virtualarray[i1][j1].Background==Color.pink) {
+                                VirtualSquare[][] copy_virtualarray = new VirtualSquare[8][8];
+                                for (int i2 = 0; i2 < 8; i2++) {
+                                    for (int j2 = 0; j2 < 8; j2++) {
+                                        VirtualSquare n = virtualarray[i2][j2];
+                                        VirtualSquare val = new VirtualSquare(n.y,n.x,n.alge_notation,n.activating_piece,n.original_color,
+                                                n.Text,n.Background);
+                                        copy_virtualarray[i2][j2]= val;
+                                    }
+                                }
+                                for (int i2 = 0; i2 < 8; i2++) {
+                                    for (int j2 = 0; j2 < 8; j2++) {
+                                        if (virtualarray[i2][j2].activating_Square_!=null) {
+                                            VirtualSquare ob = virtualarray[i2][j2].activating_Square_;
+                                            copy_virtualarray[i2][j2].activating_Square_=new VirtualSquare(ob.y,ob.x,
+                                                    ob.alge_notation,ob.activating_piece,ob.original_color,
+                                                    ob.Text,ob.Background);
+                                        }
+                                    }
+                                }
+
+
+
+                                black_moves_count=black_moves_count+1;
+                                VirtualSquare.outp(copy_virtualarray,copy_virtualarray[i1][j1]);
+                                VirtualSquare.update_board(copy_virtualarray);
+                                checkmate_counter = checkmate_counter + VirtualSquare.check_loop(copy_virtualarray);
+                            }
+                        }
+                        }
+                    VirtualSquare.update_board(virtualarray);
+                    }
+            }
+        }
+        checkmate_counter=checkmate_counter;
+        System.out.println("virtual array created");
+        if (checkmate_counter == black_moves_count) {System.out.println("Checkmate");
+            System.exit(0);}
+        System.out.println(black_moves_count);
+        System.out.println(checkmate_counter);
+        black_moves_count=0;
+        checkmate_counter=0;
+
+
     }
 
 
@@ -650,7 +666,7 @@ public class Square extends JButton{
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-                    System.out.println("Black is in check");
+                    System.out.println("Black is in check - reality");
                     update_board(myarray);
                     //sends it as black and white
 

@@ -29,6 +29,9 @@ public class VirtualSquare {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].Background = (myarray[i][j].original_color);
                 myarray[i][j].piece_color=piece_color_func(myarray[i][j].Text);
+                myarray[i][j].activating_Square_=null;
+                myarray[i][j].activating_piece=null;
+
             }}
 
     }
@@ -577,39 +580,35 @@ public class VirtualSquare {
         }
     }
 
-    public static void check(VirtualSquare[][] myarray, VirtualSquare piece) {
-        System.out.println("here");
+    public static Integer check(VirtualSquare[][] myarray, VirtualSquare piece) {
         outp(myarray, piece);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].Background==Color.pink)
-                {System.out.println("pink");
-                    System.out.println(myarray[i][j].activating_piece);}
-
-            }}
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
                     System.out.println("Black is in check");
                     update_board(myarray);
+                    return 1;
                     //sends it as black and white
                 }
                 else if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
                     System.out.println("White is in check");
+                    return 0;
                 }
 
             }}
         update_board(myarray);
-
+    return 0;
     }
 
-//    public void check_loop(VirtualSquare[][] myarray) {
-//
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                check(myarray,myarray[i][j]);
-//            }}
-//    }
+    public static Integer check_loop(VirtualSquare[][] myarray) {
+
+        Integer counter=0;
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                counter = counter + check(myarray,myarray[i][j]);
+            }}
+    return counter;}
 
     public void pink_square(VirtualSquare[][] myarray, VirtualSquare piece){
 

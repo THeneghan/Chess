@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -26,12 +24,11 @@ public class Square extends JButton{
         else {return null;}
     }
 
-    public void enh_white_check(Square[][] myarray) {
+    public void check_loop(Square[][] myarray) {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                white_check(myarray,myarray[i][j]);
-
+                check(myarray,myarray[i][j]);
             }}
     }
 
@@ -42,12 +39,13 @@ public class Square extends JButton{
         piece.setBackground(piece.original_color);
         piece.activating_Square_.setText(null);
         piece.activating_piece=null;
+        piece.activating_Square_=null;
         update_board(myarray);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                white_check(myarray,myarray[i][j]);
-            }}
+        check_loop(myarray);
+
+
     }
+
 
     public void update_board(Square[][] myarray) {
         for (int i = 0; i < 8; i++) {
@@ -91,13 +89,14 @@ public class Square extends JButton{
             }
             if (this.alge_notation.contains("2")) {
                 for (int i = this.y + 1; i <= this.y + 2; i = i + 1) {
-                    if (myarray[i][this.x].piece_color != "Black") {
+                    if (myarray[i][this.x].piece_color == null) {
                         activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");
                     }
+                    else {break;}
                 }
             } else {
                 for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
-                    if (i==8) {break;}
+                    if (i==8 | myarray[i][this.x].piece_color == "White"  ) {break;}
 
                     if (myarray[i][this.x].piece_color != "Black") {
                         activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");
@@ -280,7 +279,6 @@ public class Square extends JButton{
             }
 
         }
-
         else{ pink_square(myarray, this);}
 
 
@@ -429,7 +427,8 @@ public class Square extends JButton{
 
                     if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
                         if (myarray[orig_y-i][orig_x-i].piece_color==opp_colour) {
-                            activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,colour);
+                            activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
+                            //break;
                         }
                         break;}
                     activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
@@ -505,209 +504,164 @@ public class Square extends JButton{
 
     }
 
-
-    public void outp(Square[][] myarray) {
-        if (this.getText() == null){
-            this.blank(myarray);}
-        else if(Objects.equals(this.getText(), "\u2659 ")) {
-            this.white_pawn(myarray);
-        }
-        else if(Objects.equals(this.getText(), "\u2657 ")) {
-            this.bishop(myarray,"\u2657 ","Black");
-        }
-        else if (Objects.equals(this.getText(), "\u2656 ")) {
-            this.rook(myarray,"\u2656 ","Black");
-        }
-        else if (Objects.equals(this.getText(), "\u2658 ")) {
-            this.knight(myarray,"\u2658 ","White");
-        }
-        else if (Objects.equals(this.getText(), "\u2655 ")) {//White
-            this.queen(myarray,"\u2655 ", "Black" );
-        }
-        else if (Objects.equals(this.getText(), "\u2654 ")) {
-            this.king(myarray,"\u2654 ","White");
-        }
-        else if(Objects.equals(this.getText(), "\u265F ")) {
-            this.black_pawn(myarray);
-        }
-        else if(Objects.equals(this.getText(), "\u265C ")) {
-            this.rook(myarray,"\u265C ","White");
-        }
-        else if(Objects.equals(this.getText(), "\u265E ")) {
-            this.knight(myarray,"\u265E ", "Black" );
-        }
-        else if(Objects.equals(this.getText(), "\u265D ")) {
-            this.bishop(myarray,"\u265D ","White");
-        }
-        else if(Objects.equals(this.getText(), "\u265B ")) {
-            this.queen(myarray,"\u265B ", "White");}
-
-        else if (Objects.equals(this.getText(), "\u265A ")) {
-            this.king(myarray,"\u265A ","Black");
-        }
-        }
-
-    public void white_checkmate(Square[][] myarray) {
-        //arrives as board with pink as activated by checking piece
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-//board is returned to black and white
-            }
-        }
-        Integer howmany=0;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (Objects.equals(myarray[i][j].piece_color, "Black")) {
-                    Square[][] copy_myarray = myarray.clone();
-                    Square square_of_interest = copy_myarray[i][j];
-                    if (Objects.equals(square_of_interest.getText(), "\u265F ")) {
-                        square_of_interest.black_pawn(copy_myarray);
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265D ")) {
-                        square_of_interest.bishop(copy_myarray,"\u265D ","White");
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265C ")) {
-                        square_of_interest.rook(copy_myarray,"\u265C ","White");
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265E ")) {
-                        square_of_interest.knight(copy_myarray,"\u265E ","White");
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265B ")) {
-                        square_of_interest.queen(copy_myarray,"\u265B ","White");
-                    }
-                    //board will now have pink squares due to black activation
-                    //the following acitvates the
-                    howmany = howmany + 1;
-                    for (int i1 = 0; i1 < 8; i1++) {
-                        for (int j1 = 0; j1 < 8; j1++) {
-                            if (copy_myarray[i1][j1].getBackground()==Color.pink) {
-                                Square[][] copy_copy_myarray = copy_myarray.clone();
-
-                                Square square_of_interest2 = copy_myarray[i1][j1];
-                                if (square_of_interest2.getText() == null){
-                                    square_of_interest2.blank(copy_copy_myarray );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if(Objects.equals(square_of_interest2.getText(), "\u2659 ")) {
-                                    square_of_interest2.white_pawn(copy_copy_myarray );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-
-                                }
-                                else if(Objects.equals(square_of_interest2.getText(), "\u2657 ")) {
-                                    square_of_interest2.bishop(copy_copy_myarray,"\u2657 ","Black" );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2656 ")) {
-                                    square_of_interest2.rook(copy_copy_myarray,"\u2656 ","Black");
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2658 ")) {
-                                    square_of_interest2.knight(copy_copy_myarray,"\u2658 ","Black");
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2655 ")) {
-                                    square_of_interest2.queen(copy_copy_myarray,"\u2655 ", "Black" );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2654 ")) {
-                                    square_of_interest2.king(copy_copy_myarray,"\u2654 ","Black");
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-                                        }}
-                                }
-
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-  }
-
-    public void prelim_white_check(Square[][] myarray, Square piece) {
-        if (Objects.equals(piece.getText(), "\u2659 ")) {
+    public void activate_white_pieces(Square[][] myarray, Square piece) {
+        if(Objects.equals(piece.getText(), "\u2659 ")) {
             piece.white_pawn(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2657 ")) {
-            piece.bishop(myarray,"\u2657 ","Black");
-        } else if (Objects.equals(piece.getText(), "\u2656 ")) {
-            piece.rook(myarray,"\u2656 ","Black");
-        } else if (Objects.equals(piece.getText(), "\u2658 ")) {
-            this.knight(myarray,"\u2658 ","Black");
-        } else if (Objects.equals(piece.getText(), "\u2655 ")) {
-            this.queen(myarray, "\u2655 ", "Black");
         }
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-                    System.out.println("CHECK AGAIN");
-                }
-                else if (myarray[i][j].getBackground()==Color.pink && !Objects.equals(myarray[i][j].getText(), "\u265A ")) {
-                    System.out.println("Not a check");
-
-                }
-
-            }}
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-            }}
-
+        else if(Objects.equals(piece.getText(), "\u2657 ")) {
+            piece.bishop(myarray,"\u2657 ","Black");
+        }
+        else if (Objects.equals(piece.getText(), "\u2656 ")) {
+            piece.rook(myarray,"\u2656 ","Black");
+        }
+        else if (Objects.equals(piece.getText(), "\u2658 ")) {
+            piece.knight(myarray,"\u2658 ","White");
+        }
+        else if (Objects.equals(piece.getText(), "\u2655 ")) {//White
+            piece.queen(myarray,"\u2655 ", "Black" );
+        }
+        else if (Objects.equals(piece.getText(), "\u2654 ")) {
+            piece.king(myarray,"\u2654 ","White");
+        }
 
     }
 
-    public void white_check(Square[][] myarray, Square piece) {
-//         if (Objects.equals(piece.getText(), "\u2659 ")) {
-//            piece.white_pawn(myarray);
-//        } else if (Objects.equals(piece.getText(), "\u2657 ")) {
-//            piece.white_bishop(myarray);
-//        } else if (Objects.equals(piece.getText(), "\u2656 ")) {
-//            piece.white_rook(myarray);
-//        } else if (Objects.equals(piece.getText(), "\u2658 ")) {
-//            this.white_knight(myarray);
-//        } else if (Objects.equals(piece.getText(), "\u2655 ")) {
-//            this.white_queen(myarray);
-//        }
-//
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                if (myarray[i][j].getBackground()==Color.pink && myarray[i][j].getText()=="\u265A "){
-//                    System.out.println("CHECK");
-//                    white_checkmate(myarray);
-//
-//                }
-//
-//            }}
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                myarray[i][j].setBackground(myarray[i][j].original_color);
-//                myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-//            }}
-//
+    public void activate_black_piece(Square[][] myarray, Square piece) {
+        if(Objects.equals(piece.getText(), "\u265F ")) {
+            piece.black_pawn(myarray);
+        }
+        else if(Objects.equals(piece.getText(), "\u265C ")) {
+            piece.rook(myarray,"\u265C ","White");
+        }
+        else if(Objects.equals(piece.getText(), "\u265E ")) {
+            piece.knight(myarray,"\u265E ", "Black" );
+        }
+        else if(Objects.equals(piece.getText(), "\u265D ")) {
+            piece.bishop(myarray,"\u265D ","White");
+        }
+        else if(Objects.equals(piece.getText(), "\u265B ")) {
+            piece.queen(myarray,"\u265B ", "White");}
+
+        else if (Objects.equals(piece.getText(), "\u265A ")) {
+            piece.king(myarray,"\u265A ","Black");
+        }
+    }
+
+
+    public void outp(Square[][] myarray, Square piece) {
+        if (piece.getText() == null){
+            piece.blank(myarray);}
+        else if(Objects.equals(piece.getText(), "\u2659 ")) {
+            piece.white_pawn(myarray);
+        }
+        else if(Objects.equals(piece.getText(), "\u2657 ")) {
+            piece.bishop(myarray,"\u2657 ","Black");
+        }
+        else if (Objects.equals(piece.getText(), "\u2656 ")) {
+            piece.rook(myarray,"\u2656 ","Black");
+        }
+        else if (Objects.equals(piece.getText(), "\u2658 ")) {
+            piece.knight(myarray,"\u2658 ","White");
+        }
+        else if (Objects.equals(piece.getText(), "\u2655 ")) {//White
+            piece.queen(myarray,"\u2655 ", "Black" );
+        }
+        else if (Objects.equals(piece.getText(), "\u2654 ")) {
+            piece.king(myarray,"\u2654 ","White");
+        }
+        else if(Objects.equals(piece.getText(), "\u265F ")) {
+            piece.black_pawn(myarray);
+        }
+        else if(Objects.equals(piece.getText(), "\u265C ")) {
+            piece.rook(myarray,"\u265C ","White");
+        }
+        else if(Objects.equals(piece.getText(), "\u265E ")) {
+            piece.knight(myarray,"\u265E ", "Black" );
+        }
+        else if(Objects.equals(piece.getText(), "\u265D ")) {
+            piece.bishop(myarray,"\u265D ","White");
+        }
+        else if(Objects.equals(piece.getText(), "\u265B ")) {
+            piece.queen(myarray,"\u265B ", "White");}
+
+        else if (Objects.equals(piece.getText(), "\u265A ")) {
+            piece.king(myarray,"\u265A ","Black");
+        }
+    }
+
+
+    public void checkmate(Square[][] myarray) {
+        Integer count=0;
+        Integer count1=0;
+        VirtualSquare[][] virtualarray = new VirtualSquare[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Square val = myarray[i][j];
+                VirtualSquare virt_square = new VirtualSquare(val.y,val.x, val.alge_notation,val.activating_piece,val.original_color,val.getText(),val.getBackground());
+                virtualarray[i][j] = virt_square;
+            }}
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (virtualarray[i][j].piece_color=="Black"){
+                    //System.out.println(virtualarray[i][j].Text);
+                    //System.out.println(virtualarray[i][j].alge_notation);
+                    Integer count3=0;
+                    VirtualSquare[][] copy_virtualarray = virtualarray.clone();
+                    VirtualSquare.activate_black_piece_virtual(copy_virtualarray,copy_virtualarray[i][j]);
+                    for (int i1 = 0; i1 < 8; i1++) {
+                        for (int j1 = 0; j1 < 8; j1++) {
+                            if (copy_virtualarray[i1][j1].Background==Color.pink) {
+                                //System.out.println(copy_virtualarray[i1][j1].activating_Square_);
+                                count3=count3+1;
+                                VirtualSquare[][] copy_copy_myarray = copy_virtualarray.clone();
+                                //System.out.println(copy_copy_myarray[i1][j1].activating_Square_);
+                                VirtualSquare.pink_square2(copy_copy_myarray, i1,j1);
+                                //all pieces should now be black and white
+                                for (int i2 = 0; i2 < 8; i2++) {
+                                    for (int j2 = 0; j2 < 8; j2++) {
+                                        System.out.println(copy_copy_myarray[i2][j2].alge_notation);
+                                        System.out.println(copy_copy_myarray[i2][j2].Background);
+                                        System.out.println(copy_copy_myarray[i2][j2].activating_piece);
+                                        System.out.println(copy_copy_myarray[i2][j2].piece_color);
+
+
+
+
+                                    }}
+
+                                //System.out.println(copy_copy_myarray[i1][j1].activating_Square_);
+
+                                //VirtualSquare.check(copy_copy_myarray, copy_copy_myarray[i1][j1]);
+                            }
+                        }
+                    }
+                    System.out.println(count3);
+                    count = count+count3;
+                }
+            }
+        }
+        System.out.println(count);
+    }
+
+
+
+    public void check(Square[][] myarray, Square piece) {
+        outp(myarray, piece);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
+                    System.out.println("Black is in check");
+                    update_board(myarray);
+                    //sends it as black and white
+
+                    checkmate(myarray);
+                }
+                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
+                    System.out.println("White is in check");
+                }
+
+            }}
+        update_board(myarray);
 
     }
 
@@ -758,7 +712,7 @@ public class Square extends JButton{
         return starting_layout;
     }
 
-    Square(String word,Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
+    Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
         setText(word);
         setBackground(colour);
         this.y = Y_coord;

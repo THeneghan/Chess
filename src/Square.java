@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -10,7 +8,6 @@ public class Square extends JButton{
     Integer x;
     String alge_notation;
     String activating_piece;
-    String activating_square;
     Color original_color;
     Square activating_Square_;
     String piece_color = piece_color_func(this.getText());
@@ -27,134 +24,136 @@ public class Square extends JButton{
         else {return null;}
     }
 
-    public void enh_white_check(Square[][] myarray) {
+    public void check_loop(Square[][] myarray) {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                white_check(myarray,myarray[i][j]);
+                check(myarray,myarray[i][j]);
+            }}
+    }
+
+    public void pink_square(Square[][] myarray, Square piece){
+
+        piece.setText(piece.activating_piece);
+        piece.piece_color=piece_color_func(piece.getText());
+        piece.setBackground(piece.original_color);
+        piece.activating_Square_.setText(null);
+        piece.activating_piece=null;
+        piece.activating_Square_=null;
+        update_board(myarray);
+        check_loop(myarray);
+
+
+    }
+
+    public void update_board(Square[][] myarray) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                myarray[i][j].setBackground(myarray[i][j].original_color);
+                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
+                myarray[i][j].activating_piece=null;
+                myarray[i][j].activating_Square_=null;
 
             }}
+
     }
 
     public void blank(Square[][] myarray) {
         if (this.getBackground()!=Color.pink) {
-
-                for (int i = 0; i < 8; i++) {
-                    for (int j = 0; j < 8; j++) {
-                        myarray[i][j].setBackground(myarray[i][j].original_color);
-                        myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-
-                    }}
-        //Do king sniff here
+            update_board(myarray);
         }
-        else {;
-        this.setText(this.activating_piece);
-        this.piece_color=piece_color_func(this.getText());
-        this.setBackground(this.original_color);
-        this.activating_Square_.setText(null);
-        this.activating_Square_.piece_color=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());
-
-                }}
-
-        }
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-        white_check(myarray,myarray[i][j]);}}
+        else { pink_square(myarray, this); }
     }
 
-    public void white_pawn(Square[][] myarray) {
+    public void activate_square_pink(Square[][] myarray, Integer i, Integer j, Integer orig_y, Integer orig_x, String piece) {
+        myarray[i][j].setBackground(Color.pink);
+        myarray[i][j].activating_piece = piece;
+        myarray[i][j].activating_Square_ = myarray[orig_y][orig_x];
+        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+    }
+
+    public void pawn(Square[][] myarray, String colour) {
         if (this.getBackground()!=Color.pink) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-            }}
-
+            update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
 
-            String value = this.alge_notation;
-            for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
-                if (i==8) {break;}
+            if (colour == "Black") {
 
-                if (this.x - 1 >= 0 && (myarray[i][this.x - 1].piece_color == "Black")) {
-                    myarray[i][this.x - 1].setBackground(Color.pink);
-                    myarray[i][this.x - 1].activating_piece = "\u2659 ";
-                    myarray[i][this.x - 1].activating_Square_ = myarray[orig_y][orig_x];
+            for (int i = this.y-1; i >= this.y-1; i = i - 1) {
+                if (i+1==0) {break;}
 
+
+                if (this.x -1>=0 && (Objects.equals(myarray[i][this.x - 1].piece_color, "White"))) {
+                    activate_square_pink(myarray, i,this.x-1,orig_y,orig_x,"\u265F ");
+                }
+
+                if (this.x +1<8 && (myarray[i][this.x+1].piece_color=="White")) {
+                    activate_square_pink(myarray, i,this.x+1,orig_y,orig_x,"\u265F ");
                 }
             }
-            for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
-                if (i==8) {break;}
-
-                if (this.x + 1 < 8 && (myarray[i][this.x + 1].piece_color == "Black")) {
-                    myarray[i][this.x + 1].setBackground(Color.pink);
-                    myarray[i][this.x + 1].activating_piece = "\u2659 ";
-                    myarray[i][this.x + 1].activating_Square_ = myarray[orig_y][orig_x];
-                }
-            }
-            if (this.alge_notation.contains("2")) {
-                for (int i = this.y + 1; i <= this.y + 2; i = i + 1) {
-                    if (myarray[i][this.x].piece_color != "Black") {
-                        myarray[i][this.x].setBackground(Color.pink);
-                        myarray[i][this.x].activating_piece = "\u2659 ";
-                        //myarray[i][this.x].activating_square=this.alge_notation;
-                        myarray[i][this.x].activating_Square_ = myarray[orig_y][orig_x];
-
+            if (this.alge_notation.contains("7")) {
+                for (int i = this.y-1; i >= this.y-2; i = i - 1) {
+                    if (myarray[i][this.x].piece_color!="White") {
+                        activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u265F ");
                     }
                 }
-            } else {
+            }
+            else {
+                for (int i = this.y-1; i >= this.y-1; i = i - 1) {
+                    if (i+1==0) {break;}
+                    if (myarray[i][this.x].piece_color==null) {
+                        activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u265F ");
+                    }
+                }
+
+            }}
+
+            else if(colour == "White") {
+
                 for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
                     if (i==8) {break;}
-
-                    if (myarray[i][this.x].piece_color != "Black") {
-                        myarray[i][this.x].setBackground(Color.pink);
-                        myarray[i][this.x].activating_piece = "\u2659 ";
-                        //myarray[i][this.x].activating_square=this.alge_notation;
-                        myarray[i][this.x].activating_Square_ = myarray[orig_y][orig_x];
-
+                    if (this.x - 1 >= 0 && (myarray[i][this.x - 1].piece_color == "Black")) {
+                        activate_square_pink(myarray, i,this.x-1,orig_y,orig_x,"\u2659 ");
                     }
                 }
+                for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
+                    if (i==8) {break;}
+                    if (this.x + 1 < 8 && (myarray[i][this.x + 1].piece_color == "Black")) {
+                        activate_square_pink(myarray, i,this.x+1,orig_y,orig_x,"\u2659 ");
+                    }
+                }
+                if (this.alge_notation.contains("2")) {
+                    for (int i = this.y + 1; i <= this.y + 2; i = i + 1) {
+                        if (myarray[i][this.x].piece_color == null) {
+                            activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");
+                        }
+                        else {break;}
+                    }
+                } else {
+                    for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
+                        if (i==8 | myarray[i][this.x].piece_color == "White"  ) {break;}
 
-            }}
-        else{
-            this.setText(this.activating_piece);
+                        if (myarray[i][this.x].piece_color != "Black") {
+                            activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");
+                        }
+                    }
 
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
+                }
+            }
 
         }
+        else{ pink_square(myarray, this);}
 
 
-        }
+    }
 
-    public void white_bishop(Square[][] myarray) {
+
+
+    public void bishop(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
+            update_board(myarray);
 
-            }}
 
         Integer orig_x = this.x;
         Integer orig_y = this.y;
@@ -162,22 +161,15 @@ public class Square extends JButton{
         for (int i = 1; i <= 8; i = i + 1) {
             Integer less_than_8y=orig_y+i;
             Integer less_than_8x=orig_x+i;
-            Integer more_than_0x = orig_x-i;
             if (less_than_8y < 8 && less_than_8x <8){
                 if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                    if (myarray[orig_y+i][orig_x+i].piece_color=="Black") {
-                        myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                        myarray[orig_y+i][orig_x+i].activating_piece="\u2657 ";
-                        myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                    if (myarray[orig_y+i][orig_x+i].piece_color==opp_colour) {
+                        activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                         break;
                     }
                     break;}
-                myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                myarray[orig_y+i][orig_x+i].activating_piece="\u2657 ";
-                myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
+                activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                 myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
 
             }
 
@@ -189,19 +181,13 @@ public class Square extends JButton{
 
             if (less_than_8x < 8 && more_than_0y >=0){
                 if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                    if (myarray[orig_y-i][orig_x+i].piece_color=="Black") {
-                        myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                        myarray[orig_y-i][orig_x+i].activating_piece="\u2657 ";
-                        myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                    if (myarray[orig_y-i][orig_x+i].piece_color==opp_colour) {
+                        activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
+
                         break;
                     }
                     break;}
-                myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                myarray[orig_y-i][orig_x+i].activating_piece="\u2657 ";
-                myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
 
             }
 
@@ -215,402 +201,33 @@ public class Square extends JButton{
 
                 if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
 
-                    if (myarray[orig_y-i][orig_x-i].piece_color=="Black") {
-                        myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                        myarray[orig_y-i][orig_x-i].activating_piece="\u2657 ";
-                        myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
+                    if (myarray[orig_y-i][orig_x-i].piece_color==opp_colour) {
+                        activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
                     }
-
                     break;}
-                myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                myarray[orig_y-i][orig_x-i].activating_piece="\u2657 ";
-                myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
+                activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
             }
-
         }
         for (int i = 1; i <= 8; i = i + 1) {
             Integer less_than_8y=orig_y+i;
             Integer more_than_0x = orig_x-i;
             if (less_than_8y < 8 && more_than_0x >=0){
                 if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                    if (myarray[orig_y+i][orig_x-i].piece_color=="Black") {
-                        myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                        myarray[orig_y+i][orig_x-i].activating_piece="\u2657 ";
-                        myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                    if (myarray[orig_y+i][orig_x-i].piece_color==opp_colour) {
+                        activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);
+                    }
                     break;
                 }
-                myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                myarray[orig_y+i][orig_x-i].activating_piece="\u2657 ";
-                myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);
             }
 
         }}
-        else{
-            this.setText(this.activating_piece);
-
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
-    }
-
-    public void white_rook(Square[][] myarray) {
-        if (this.getBackground()!=Color.pink) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());
-                }
-            }
-            Integer orig_x = this.x;
-            Integer orig_y = this.y;
-            for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y = orig_y + i;
-                if (less_than_8y < 8) {
-                    if (myarray[orig_y + i][orig_x].piece_color != null) {
-                        if (myarray[orig_y + i][orig_x].piece_color == "Black") {
-                            myarray[orig_y + i][orig_x].setBackground(Color.pink);
-                            myarray[orig_y + i][orig_x].activating_piece = "\u2656 ";
-                            myarray[orig_y + i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-                            break;
-
-                        }
-
-                        break;
-                    }
-                    myarray[orig_y + i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y + i][orig_x].activating_piece = "\u2656 ";
-                    myarray[orig_y + i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-                }
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x = orig_x + i;
-                if (less_than_8x < 8) {
-                    if (myarray[orig_y][orig_x + i].piece_color != null) {
-                        if (myarray[orig_y][orig_x + i].piece_color == "Black") {
-                            myarray[orig_y][orig_x + i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x + i].activating_piece = "\u2656 ";
-                            myarray[orig_y][orig_x + i].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-                            break;
-                        }
-                        break;
-                    }
-                    myarray[orig_y][orig_x + i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x + i].activating_piece = "\u2656 ";
-                    myarray[orig_y][orig_x + i].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-                }
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-
-                Integer more_than_0x = orig_x - i;
-                if (more_than_0x >= 0) {
-                    if (myarray[orig_y][orig_x - i].piece_color != null) {
-                        if (myarray[orig_y][orig_x - i].piece_color == "Black") {
-                            myarray[orig_y][orig_x - i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x - i].activating_piece = "\u2656 ";
-                            myarray[orig_y][orig_x - i].activating_Square_ = myarray[orig_y][orig_x];
-                        }
-                        break;
-                    }
-                    myarray[orig_y][orig_x - i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x - i].activating_piece = "\u2656 ";
-                    myarray[orig_y][orig_x - i].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-                }
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-
-                Integer more_than_0y = orig_y - i;
-
-                if (more_than_0y >= 0) {
-
-                    if (myarray[orig_y - i][orig_x].piece_color != null) {
-                        if (myarray[orig_y - 1][orig_x].piece_color == "Black") {
-                            myarray[orig_y - 1][orig_x].setBackground(Color.pink);
-                            myarray[orig_y - 1][orig_x].activating_piece = "\u2656 ";
-                            myarray[orig_y - 1][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-
-                            break;
-                        }
-                        break;
-                    }
-                    myarray[orig_y - i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y - i][orig_x].activating_piece = "\u2656 ";
-                    myarray[orig_y - i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-
-                }
-            }
-//
-        }
-        else{
-            this.setText(this.activating_piece);
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
+        else{ pink_square(myarray, this);}
 
     }
 
-    public void white_queen(Square[][] myarray) {
-        if (this.getBackground()!=Color.pink){
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-            }}
-
-
-        Integer orig_x = this.x;
-        Integer orig_y = this.y;
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer less_than_8y=orig_y+i;
-            Integer less_than_8x=orig_x+i;
-            if (less_than_8y < 8 && less_than_8x <8){
-                if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                    if (myarray[orig_y+i][orig_x+i].piece_color=="Black") {
-                        myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                        myarray[orig_y+i][orig_x+i].activating_piece="\u2655 ";
-                        myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                        break;
-                    }
-                    break;}
-                myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                myarray[orig_y+i][orig_x+i].activating_piece="\u2655 ";
-                myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-            }
-
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer less_than_8x=orig_x+i;
-            Integer more_than_0y = orig_y-i;
-
-            if (less_than_8x < 8 && more_than_0y >=0){
-                if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                    if (myarray[orig_y-i][orig_x+i].piece_color=="Black") {
-                        myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                        myarray[orig_y-i][orig_x+i].activating_piece="\u2655 ";
-                        myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                        break;
-                    }
-                    break;}
-                myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                myarray[orig_y-i][orig_x+i].activating_piece="\u2655 ";
-                myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-            }
-
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer more_than_0x = orig_x-i;
-            Integer more_than_0y = orig_y-i;
-
-            if (more_than_0x >= 0 && more_than_0y >=0){
-
-                if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
-                    if (myarray[orig_y-i][orig_x-i].piece_color=="Black") {
-                        myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                        myarray[orig_y-i][orig_x-i].activating_piece="\u2655 ";
-                        myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-                    }
-                    break;}
-                myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                myarray[orig_y-i][orig_x-i].activating_piece="\u2655 ";
-                myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-            }
-
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer less_than_8y=orig_y+i;
-            Integer more_than_0x = orig_x-i;
-            if (less_than_8y < 8 && more_than_0x >=0){
-                if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                    if (myarray[orig_y+i][orig_x-i].piece_color=="Black") {
-                        myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                        myarray[orig_y+i][orig_x-i].activating_piece="\u2655 ";
-                        myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-                    break;
-                }
-                myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                myarray[orig_y+i][orig_x-i].activating_piece="\u2655 ";
-                myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-            }
-
-        }
-
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer less_than_8y=orig_y+i;
-
-            if (less_than_8y < 8){
-                if (myarray[orig_y+i][orig_x].piece_color!=null) {
-                    if (myarray[orig_y+i][orig_x].piece_color=="Black") {
-                        myarray[orig_y+i][orig_x].setBackground(Color.pink);
-                        myarray[orig_y+i][orig_x].activating_piece="\u2655 ";
-                        myarray[orig_y+i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                        break;
-
-                    }
-
-                    break;}
-                myarray[orig_y+i][orig_x].setBackground(Color.pink);
-                myarray[orig_y+i][orig_x].activating_piece="\u2655 ";
-                myarray[orig_y+i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-            }
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-            Integer less_than_8x=orig_x+i;
-            if (less_than_8x < 8){
-                if (myarray[orig_y][orig_x+i].piece_color!=null) {
-                    if (myarray[orig_y][orig_x+i].piece_color=="Black") {
-                        myarray[orig_y][orig_x+i].setBackground(Color.pink);
-                        myarray[orig_y][orig_x+i].activating_piece="\u2655 ";
-                        myarray[orig_y][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                        break;}
-                    break;}
-                myarray[orig_y][orig_x+i].setBackground(Color.pink);
-                myarray[orig_y][orig_x+i].activating_piece="\u2655 ";
-                myarray[orig_y][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-            }
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-
-            Integer more_than_0x = orig_x-i;
-            if (more_than_0x >= 0){
-                if (myarray[orig_y][orig_x-i].piece_color!=null) {
-                    if (myarray[orig_y][orig_x-i].piece_color=="Black") {
-                        myarray[orig_y][orig_x-i].setBackground(Color.pink);
-                        myarray[orig_y][orig_x-i].activating_piece="\u2655 ";
-                        myarray[orig_y][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
-                    break;}
-                myarray[orig_y][orig_x-i].setBackground(Color.pink);
-                myarray[orig_y][orig_x-i].activating_piece="\u2655 ";
-                myarray[orig_y][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-            }
-        }
-        for (int i = 1; i <= 8; i = i + 1) {
-
-            Integer more_than_0y = orig_y-i;
-
-            if (more_than_0y >= 0){
-
-                if (myarray[orig_y-i][orig_x].piece_color!=null) {
-                    if (myarray[orig_y-i][orig_x].piece_color=="Black") {
-                        myarray[orig_y-i][orig_x].setBackground(Color.pink);
-                        myarray[orig_y-i][orig_x].activating_piece="\u2655 ";
-                        myarray[orig_y-i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-                        break;
-                    }
-                    break;
-                }
-                myarray[orig_y-i][orig_x].setBackground(Color.pink);
-                myarray[orig_y-i][orig_x].activating_piece="\u2655 ";
-                myarray[orig_y-i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-            }
-        }}
-
-        else{
-            this.setText(this.activating_piece);
-
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
-
-
-    }
-
-    public void white_king(Square[][] myarray) {
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-            }}
-
-
+    public void king(Square[][] myarray, String Colour, String opp_colour) {
+        update_board(myarray);
         Integer orig_x = this.x;
         Integer orig_y = this.y;
         Integer less_than_8y=orig_y+1;
@@ -618,316 +235,101 @@ public class Square extends JButton{
         Integer more_than_0x = orig_x-1;
         Integer more_than_0y = orig_y-1;
             if (less_than_8y < 8 && less_than_8x <8){
-                if (myarray[orig_y+1][orig_x+1].piece_color!="White") {
-                        myarray[orig_y+1][orig_x+1].setBackground(Color.pink);
-                        myarray[orig_y+1][orig_x+1].activating_piece="\u2654 ";
-                        myarray[orig_y+1][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                if (myarray[orig_y+1][orig_x+1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y+1,orig_x+1,orig_y,orig_x,Colour);
                 }}
 
 
             if (less_than_8x < 8 && more_than_0y >=0){
-                if (myarray[orig_y-1][orig_x+1].piece_color!="White") {
-                        myarray[orig_y-1][orig_x+1].setBackground(Color.pink);
-                        myarray[orig_y-1][orig_x+1].activating_piece="\u2654 ";
-                        myarray[orig_y-1][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                if (myarray[orig_y-1][orig_x+1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y-1,orig_x+1,orig_y,orig_x,Colour);
                     }
-
-
         }
 
             if (more_than_0x >= 0 && more_than_0y >=0){
 
-                if (myarray[orig_y-1][orig_x-1].piece_color!="White") {
-                        myarray[orig_y-1][orig_x-1].setBackground(Color.pink);
-                        myarray[orig_y-1][orig_x-1].activating_piece="\u2654 ";
-                        myarray[orig_y-1][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                if (myarray[orig_y-1][orig_x-1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y-1,orig_x-1,orig_y,orig_x,Colour);
                     }
 
         }
 
             if (less_than_8y < 8 && more_than_0x >=0){
-                if (myarray[orig_y+1][orig_x-1].piece_color!="White") {
-                        myarray[orig_y+1][orig_x-1].setBackground(Color.pink);
-                        myarray[orig_y+1][orig_x-1].activating_piece="\u2654 ";
-                        myarray[orig_y+1][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                if (myarray[orig_y+1][orig_x-1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y+1,orig_x-1,orig_y,orig_x,Colour);
                 }}
 
             if (less_than_8y < 8){
-                if (myarray[orig_y+1][orig_x].piece_color!="White") {
-
-                        myarray[orig_y+1][orig_x].setBackground(Color.pink);
-                        myarray[orig_y+1][orig_x].activating_piece="\u2654 ";
-                        myarray[orig_y+1][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                if (myarray[orig_y+1][orig_x].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y+1,orig_x,orig_y,orig_x,Colour);
                 }
 
         }
 
             if (less_than_8x < 8){
-                if (myarray[orig_y][orig_x+1].piece_color!="White") {
-                        myarray[orig_y][orig_x+1].setBackground(Color.pink);
-                        myarray[orig_y][orig_x+1].activating_piece="\u2654 ";
-                        myarray[orig_y][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                if (myarray[orig_y][orig_x+1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y,orig_x+1,orig_y,orig_x,Colour);
                 }
 
         }
             if (more_than_0x >= 0){
-                if (myarray[orig_y][orig_x-1].piece_color!="White") {
-
-                        myarray[orig_y][orig_x-1].setBackground(Color.pink);
-                        myarray[orig_y][orig_x-1].activating_piece="\u2654 ";
-                        myarray[orig_y][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                if (myarray[orig_y][orig_x-1].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y,orig_x-1,orig_y,orig_x,Colour);
                 }
                     }
-
 
             if (more_than_0y >= 0){
-
-                if (myarray[orig_y-1][orig_x].piece_color!="White") {
-                        myarray[orig_y-1][orig_x].setBackground(Color.pink);
-                        myarray[orig_y-1][orig_x].activating_piece="\u2654 ";
-                        myarray[orig_y-1][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                if (myarray[orig_y-1][orig_x].piece_color!=opp_colour) {
+                    activate_square_pink(myarray, orig_y-1,orig_x,orig_y,orig_x,Colour);
                     }
 
                 }
 
             }
 
-    public void white_knight (Square[][] myarray) {
+
+
+    public void rook(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground()!=Color.pink) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-            }}
-        Integer orig_x = this.x;
-        Integer orig_y = this.y;
-        if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!="White") {
-            myarray[orig_y+2][orig_x+1].setBackground(Color.pink);
-            myarray[orig_y+2][orig_x+1].activating_piece="\u2658 ";
-            myarray[orig_y+2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y+2 <= 7 && orig_x-1 >= 0 && myarray[orig_y+2][orig_x-1].piece_color!= "White" ) {
-            myarray[orig_y+2][orig_x-1].setBackground(Color.pink);
-            myarray[orig_y+2][orig_x-1].activating_piece="\u2658 ";
-            myarray[orig_y+2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y-2 >= 0 && orig_x+1 <= 7 && myarray[orig_y-2][orig_x+1].piece_color!="White") {
-            myarray[orig_y-2][orig_x+1].setBackground(Color.pink);
-            myarray[orig_y-2][orig_x+1].activating_piece="\u2658 ";
-            myarray[orig_y-2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y-2 >= 0 && orig_x-1 >= 0 && myarray[orig_y-2][orig_x-1].piece_color!="White") {
-            myarray[orig_y-2][orig_x-1].setBackground(Color.pink);
-            myarray[orig_y-2][orig_x-1].activating_piece="\u2658 ";
-            myarray[orig_y-2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y+1 <= 7 && orig_x+2 <= 7 && myarray[orig_y+1][orig_x+2].piece_color!="White") {
-            myarray[orig_y+1][orig_x+2].setBackground(Color.pink);
-            myarray[orig_y+1][orig_x+2].activating_piece="\u2658 ";
-            myarray[orig_y+1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y-1 >= 0 && orig_x+2 <= 7 && myarray[orig_y-1][orig_x+2].piece_color!="White") {
-            myarray[orig_y-1][orig_x+2].setBackground(Color.pink);
-            myarray[orig_y-1][orig_x+2].activating_piece="\u2658 ";
-            myarray[orig_y-1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y+1 <= 7 && orig_x-2 >= 0 && myarray[orig_y+1][orig_x-2].piece_color!="White") {
-            myarray[orig_y+1][orig_x-2].setBackground(Color.pink);
-            myarray[orig_y+1][orig_x-2].activating_piece="\u2658 ";
-            myarray[orig_y+1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-        }
-        if (orig_y-1 >= 0 && orig_x-2 >= 0 && myarray[orig_y-1][orig_x-2].piece_color!="White") {
-            myarray[orig_y-1][orig_x-2].setBackground(Color.pink);
-            myarray[orig_y-1][orig_x-2].activating_piece="\u2658 ";
-            myarray[orig_y-1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
-            myarray[orig_y-1][orig_x-2].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-        }}
-
-        else{
-
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
-
-    }
-
-    public void black_pawn(Square[][] myarray) {
-        if (this.getBackground()!=Color.pink) {
-
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-                }}
-
+            update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
-
-            String value = this.alge_notation;
-            for (int i = this.y-1; i >= this.y-1; i = i - 1) {
-
-                if (this.x -1>=0 && (Objects.equals(myarray[i][this.x - 1].piece_color, "White"))) {
-                    myarray[i][this.x-1].setBackground(Color.pink);
-                    myarray[i][this.x-1].activating_piece="\u265F ";
-                    myarray[i][this.x-1].activating_Square_=myarray[orig_y][orig_x];
-
-                }
-
-                if (this.x +1<8 && (myarray[i][this.x+1].piece_color=="White")) {
-                    myarray[i][this.x+1].setBackground(Color.pink);
-                    myarray[i][this.x+1].activating_piece="\u265F ";
-                    myarray[i][this.x+1].activating_Square_=myarray[orig_y][orig_x];
-                }
-            }
-            if (this.alge_notation.contains("7")) {
-                for (int i = this.y-1; i >= this.y-2; i = i - 1) {
-                    if (myarray[i][this.x].piece_color!="White") {
-                        myarray[i][this.x].setBackground(Color.pink);
-                        myarray[i][this.x].activating_piece="\u265F ";
-                        myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                        }
-                }
-            }
-            else {
-                for (int i = this.y-1; i >= this.y-1; i = i - 1) {
-                    if (myarray[i][this.x].piece_color==null) {
-                        myarray[i][this.x].setBackground(Color.pink);
-                        myarray[i][this.x].activating_piece="\u265F ";
-                        myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                        }
-                }
-
-            }
-
-        }
-
-
-
-        else{
-            this.setText(this.activating_piece);
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
-
-
-    }
-
-    public void black_rook(Square[][] myarray) {
-        if (this.getBackground()!=Color.pink) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());
-                }
-            }
-            Integer orig_x = this.x;
-            Integer orig_y = this.y;
-
             for (int i = 1; i <= 8; i = i + 1) {
                 Integer less_than_8y = orig_y + i;
                 if (less_than_8y < 8) {
                     if (myarray[orig_y + i][orig_x].piece_color != null) {
-                        if (myarray[orig_y + i][orig_x].piece_color == "White") {
-                            myarray[orig_y + i][orig_x].setBackground(Color.pink);
-                            myarray[orig_y + i][orig_x].activating_piece = "\u265C ";
-                            myarray[orig_y + i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y + i][orig_x].piece_color == opp_colour) {
+                            activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,Colour);
                             break;
-
                         }
-
                         break;
                     }
-                    myarray[orig_y + i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y + i][orig_x].activating_piece = "\u265C ";
-                    myarray[orig_y + i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,Colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
                 Integer less_than_8x = orig_x + i;
                 if (less_than_8x < 8) {
                     if (myarray[orig_y][orig_x + i].piece_color != null) {
-                        if (myarray[orig_y][orig_x + i].piece_color == "White") {
-                            myarray[orig_y][orig_x + i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x + i].activating_piece = "\u265C ";
-                            myarray[orig_y][orig_x + i].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y][orig_x + i].piece_color == opp_colour) {
+                            activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,Colour);
                             break;
                         }
                         break;
                     }
-                    myarray[orig_y][orig_x + i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x + i].activating_piece = "\u265C ";
-                    myarray[orig_y][orig_x + i].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,Colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
                 Integer more_than_0x = orig_x - i;
                 if (more_than_0x >= 0) {
                     if (myarray[orig_y][orig_x - i].piece_color != null) {
-                        if (myarray[orig_y][orig_x - i].piece_color == "White") {
-                            myarray[orig_y][orig_x - i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x - i].activating_piece = "\u265C ";
-                            myarray[orig_y][orig_x - i].activating_Square_ = myarray[orig_y][orig_x];
+                        if (myarray[orig_y][orig_x - i].piece_color == opp_colour) {
+                            activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,Colour);
                         }
                         break;
                     }
-                    myarray[orig_y][orig_x - i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x - i].activating_piece = "\u265C ";
-                    myarray[orig_y][orig_x - i].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,Colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
@@ -935,267 +337,58 @@ public class Square extends JButton{
 
                 if (more_than_0y >= 0) {
                     if (myarray[orig_y - i][orig_x].piece_color != null) {
-                        if (myarray[orig_y - 1][orig_x].piece_color == "White") {
-                            myarray[orig_y - 1][orig_x].setBackground(Color.pink);
-                            myarray[orig_y - 1][orig_x].activating_piece = "\u265C ";
-                            myarray[orig_y - 1][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y - 1][orig_x].piece_color == opp_colour) {
+                            activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,Colour);
                             break;
                         }
                         break;
                     }
-                    myarray[orig_y - i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y - i][orig_x].activating_piece = "\u265C ";
-                    myarray[orig_y - i][orig_x].activating_Square_ = myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
-
+                    activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,Colour);
                 }
             }
 //
         }
-        else{
-            this.setText(this.activating_piece);
-
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    //white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
+        else{ pink_square(myarray, this);}
 
     }
 
-
-    public void black_bishop(Square[][] myarray) {
-        if (this.getBackground()!=Color.pink){
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-                }}
-
-            Integer orig_x = this.x;
-            Integer orig_y = this.y;
-            for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer less_than_8x=orig_x+i;
-
-                if (less_than_8y < 8 && less_than_8x <8){
-                    if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x+i].piece_color=="White") {
-                            myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                            myarray[orig_y+i][orig_x+i].activating_piece="\u265D ";
-                            myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                            break;
-                        }
-                        break;}
-                    myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                    myarray[orig_y+i][orig_x+i].activating_piece="\u265D ";
-                    myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-                }
-
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x=orig_x+i;
-                Integer more_than_0y = orig_y-i;
-
-                if (less_than_8x < 8 && more_than_0y >=0){
-                    if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x+i].piece_color=="White") {
-                            myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                            myarray[orig_y-i][orig_x+i].activating_piece="\u265D ";
-                            myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-                            break;
-                        }
-                        break;}
-                    myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                    myarray[orig_y-i][orig_x+i].activating_piece="\u265D ";
-                    myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-                }
-
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-
-                Integer more_than_0x = orig_x-i;
-                Integer more_than_0y = orig_y-i;
-
-                if (more_than_0x >= 0 && more_than_0y >=0){
-
-                    if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x-i].piece_color=="White") {
-                            myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                            myarray[orig_y-i][orig_x-i].activating_piece="\u265D ";
-                            myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-                        }
-                        break;}
-                    myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                    myarray[orig_y-i][orig_x-i].activating_piece="\u265D ";
-                    myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
-                }
-
-            }
-            for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer more_than_0x = orig_x-i;
-                if (less_than_8y < 8 && more_than_0x >=0){
-                    if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x-i].piece_color=="White") {
-                            myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                            myarray[orig_y+i][orig_x-i].activating_piece="\u265D ";
-                            myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-                        break;
-                    }
-                    myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                    myarray[orig_y+i][orig_x-i].activating_piece="\u265D ";
-                    myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-                }
-
-            }}
-        else{
-            this.setText(this.activating_piece);
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    //white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
-
-
-    }
-
-    public void black_knight(Square[][] myarray) {
+    public void knight(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground()!=Color.pink) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-                }}
+            update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
-            if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!="Black") {
-                myarray[orig_y+2][orig_x+1].setBackground(Color.pink);
-                myarray[orig_y+2][orig_x+1].activating_piece="\u265E ";
-                myarray[orig_y+2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y+2,orig_x+1,orig_y,orig_x,Colour);
             }
-            if (orig_y+2 <= 7 && orig_x-1 >= 0 && myarray[orig_y+2][orig_x-1].piece_color!= "Black" ) {
-                myarray[orig_y+2][orig_x-1].setBackground(Color.pink);
-                myarray[orig_y+2][orig_x-1].activating_piece="\u265E ";
-                myarray[orig_y+2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y+2 <= 7 && orig_x-1 >= 0 && myarray[orig_y+2][orig_x-1].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y+2,orig_x-1,orig_y,orig_x,Colour);
             }
-            if (orig_y-2 >= 0 && orig_x+1 <= 7 && myarray[orig_y-2][orig_x+1].piece_color!="Black") {
-                myarray[orig_y-2][orig_x+1].setBackground(Color.pink);
-                myarray[orig_y-2][orig_x+1].activating_piece="\u265E ";
-                myarray[orig_y-2][orig_x+1].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y-2 >= 0 && orig_x+1 <= 7 && myarray[orig_y-2][orig_x+1].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y-2,orig_x+1,orig_y,orig_x,Colour);
             }
-            if (orig_y-2 >= 0 && orig_x-1 >= 0 && myarray[orig_y-2][orig_x-1].piece_color!="Black") {
-                myarray[orig_y-2][orig_x-1].setBackground(Color.pink);
-                myarray[orig_y-2][orig_x-1].activating_piece="\u265E ";
-                myarray[orig_y-2][orig_x-1].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y-2 >= 0 && orig_x-1 >= 0 && myarray[orig_y-2][orig_x-1].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y-2,orig_x-1,orig_y,orig_x,Colour);
             }
-            if (orig_y+1 <= 7 && orig_x+2 <= 7 && myarray[orig_y+1][orig_x+2].piece_color!="Black") {
-                myarray[orig_y+1][orig_x+2].setBackground(Color.pink);
-                myarray[orig_y+1][orig_x+2].activating_piece="\u265E ";
-                myarray[orig_y+1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y+1 <= 7 && orig_x+2 <= 7 && myarray[orig_y+1][orig_x+2].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y+1,orig_x+2,orig_y,orig_x,Colour);
             }
-            if (orig_y-1 >= 0 && orig_x+2 <= 7 && myarray[orig_y-1][orig_x+2].piece_color!="Black") {
-                myarray[orig_y-1][orig_x+2].setBackground(Color.pink);
-                myarray[orig_y-1][orig_x+2].activating_piece="\u265E ";
-                myarray[orig_y-1][orig_x+2].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y-1 >= 0 && orig_x+2 <= 7 && myarray[orig_y-1][orig_x+2].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y-1,orig_x+2,orig_y,orig_x,Colour);
             }
-            if (orig_y+1 <= 7 && orig_x-2 >= 0 && myarray[orig_y+1][orig_x-2].piece_color!="Black") {
-                myarray[orig_y+1][orig_x-2].setBackground(Color.pink);
-                myarray[orig_y+1][orig_x-2].activating_piece="\u265E ";
-                myarray[orig_y+1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y+1 <= 7 && orig_x-2 >= 0 && myarray[orig_y+1][orig_x-2].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y+1,orig_x-2,orig_y,orig_x,Colour);
             }
-            if (orig_y-1 >= 0 && orig_x-2 >= 0 && myarray[orig_y-1][orig_x-2].piece_color!="White") {
-                myarray[orig_y-1][orig_x-2].setBackground(Color.pink);
-                myarray[orig_y-1][orig_x-2].activating_piece="\u2658 ";
-                myarray[orig_y-1][orig_x-2].activating_Square_=myarray[orig_y][orig_x];
-                myarray[orig_y-1][orig_x-2].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+            if (orig_y-1 >= 0 && orig_x-2 >= 0 && myarray[orig_y-1][orig_x-2].piece_color!=opp_colour) {
+                activate_square_pink(myarray, orig_y-1,orig_x-2,orig_y,orig_x,Colour);
             }}
 
-        else{
-            this.setText(this.activating_piece);
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    //white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
+        else{ pink_square(myarray, this);}
 
     }
 
-    public void black_queen(Square[][] myarray) {
+    public void queen(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
-
-                }}
-
-
+            update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -1203,19 +396,13 @@ public class Square extends JButton{
                 Integer less_than_8x=orig_x+i;
                 if (less_than_8y < 8 && less_than_8x <8){
                     if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x+i].piece_color=="White") {
-                            myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                            myarray[orig_y+i][orig_x+i].activating_piece="\u265B ";
-                            myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y+i][orig_x+i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                             break;
                         }
                         break;}
-                    myarray[orig_y+i][orig_x+i].setBackground(Color.pink);
-                    myarray[orig_y+i][orig_x+i].activating_piece="\u265B ";
-                    myarray[orig_y+i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
+                    activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                     myarray[i][this.x].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
 
                 }
 
@@ -1226,19 +413,12 @@ public class Square extends JButton{
 
                 if (less_than_8x < 8 && more_than_0y >=0){
                     if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x+i].piece_color=="White") {
-                            myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                            myarray[orig_y-i][orig_x+i].activating_piece="\u265B ";
-                            myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y-i][orig_x+i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
                             break;
                         }
                         break;}
-                    myarray[orig_y-i][orig_x+i].setBackground(Color.pink);
-                    myarray[orig_y-i][orig_x+i].activating_piece="\u265B ";
-                    myarray[orig_y-i][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                    activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
 
                 }
 
@@ -1251,21 +431,12 @@ public class Square extends JButton{
                 if (more_than_0x >= 0 && more_than_0y >=0){
 
                     if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x-i].piece_color=="White") {
-                            myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                            myarray[orig_y-i][orig_x-i].activating_piece="\u265B ";
-                            myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
+                        if (myarray[orig_y-i][orig_x-i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
+                            //break;
                         }
                         break;}
-                    myarray[orig_y-i][orig_x-i].setBackground(Color.pink);
-                    myarray[orig_y-i][orig_x-i].activating_piece="\u265B ";
-                    myarray[orig_y-i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
-
+                    activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
                 }
 
             }
@@ -1274,19 +445,11 @@ public class Square extends JButton{
                 Integer more_than_0x = orig_x-i;
                 if (less_than_8y < 8 && more_than_0x >=0){
                     if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x-i].piece_color=="White") {
-                            myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                            myarray[orig_y+i][orig_x-i].activating_piece="\u265B ";
-                            myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
-                        myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                        if (myarray[orig_y+i][orig_x-i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);}
                         break;
                     }
-                    myarray[orig_y+i][orig_x-i].setBackground(Color.pink);
-                    myarray[orig_y+i][orig_x-i].activating_piece="\u265B ";
-                    myarray[orig_y+i][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                    activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);
                 }
 
             }
@@ -1295,52 +458,34 @@ public class Square extends JButton{
                 Integer less_than_8y=orig_y+i;
                 if (less_than_8y < 8){
                     if (myarray[orig_y+i][orig_x].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x].piece_color=="White") {
-                            myarray[orig_y+i][orig_x].setBackground(Color.pink);
-                            myarray[orig_y+i][orig_x].activating_piece="\u265B ";
-                            myarray[orig_y+i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y+i][orig_x].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,colour);
                             break;
-
                         }
-
                         break;}
-                    myarray[orig_y+i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y+i][orig_x].activating_piece="\u265B ";
-                    myarray[orig_y+i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
                 Integer less_than_8x=orig_x+i;
                 if (less_than_8x < 8){
                     if (myarray[orig_y][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y][orig_x+i].piece_color=="White") {
-                            myarray[orig_y][orig_x+i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x+i].activating_piece="\u265B ";
-                            myarray[orig_y][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y][orig_x+i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,colour);
                             break;}
                         break;}
-                    myarray[orig_y][orig_x+i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x+i].activating_piece="\u265B ";
-                    myarray[orig_y][orig_x+i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
                 Integer more_than_0x = orig_x-i;
                 if (more_than_0x >= 0){
                     if (myarray[orig_y][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y][orig_x-i].piece_color=="White") {
-                            myarray[orig_y][orig_x-i].setBackground(Color.pink);
-                            myarray[orig_y][orig_x-i].activating_piece="\u265B ";
-                            myarray[orig_y][orig_x-i].activating_Square_=myarray[orig_y][orig_x];}
+                        if (myarray[orig_y][orig_x-i].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,colour);
+                                                                                }
                         break;}
-                    myarray[orig_y][orig_x-i].setBackground(Color.pink);
-                    myarray[orig_y][orig_x-i].activating_piece="\u265B ";
-                    myarray[orig_y][orig_x-i].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                    activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,colour);
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
@@ -1350,258 +495,144 @@ public class Square extends JButton{
                 if (more_than_0y >= 0){
 
                     if (myarray[orig_y-i][orig_x].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x].piece_color=="White") {
-                            myarray[orig_y-i][orig_x].setBackground(Color.pink);
-                            myarray[orig_y-i][orig_x].activating_piece="\u265B ";
-                            myarray[orig_y-i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                            myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
+                        if (myarray[orig_y-i][orig_x].piece_color==opp_colour) {
+                            activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,colour);
                             break;
                         }
                         break;
                     }
-                    myarray[orig_y-i][orig_x].setBackground(Color.pink);
-                    myarray[orig_y-i][orig_x].activating_piece="\u265B ";
-                    myarray[orig_y-i][orig_x].activating_Square_=myarray[orig_y][orig_x];
-                    myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
-
+                    activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,colour);
                 }
             }}
-
-        else{
-            this.setText(this.activating_piece);
-            this.piece_color=piece_color_func(this.getText());
-            this.setBackground(this.original_color);
-
-            this.activating_Square_.setText(null);
-            this.activating_piece=null;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    myarray[i][j].setBackground(myarray[i][j].original_color);
-                    myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-
-                }}
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    //white_check(myarray,myarray[i][j]);
-
-                }}
-
-        }
+        else{ pink_square(myarray, this);}
 
 
     }
 
 
-    public void outp(Square[][] myarray) {
-        if (this.getText() == null){
-            this.blank(myarray);}
-        else if(Objects.equals(this.getText(), "\u2659 ")) {
-            this.white_pawn(myarray);
+    public void outp(Square[][] myarray, Square piece) {
+        if (piece.getText() == null){
+            piece.blank(myarray);}
+        else if(Objects.equals(piece.getText(), "\u2659 ")) {
+            piece.pawn(myarray,"White");
         }
-        else if(Objects.equals(this.getText(), "\u2657 ")) {
-            this.white_bishop(myarray);
+        else if(Objects.equals(piece.getText(), "\u2657 ")) {
+            piece.bishop(myarray,"\u2657 ","Black");
         }
-        else if (Objects.equals(this.getText(), "\u2656 ")) {
-            this.white_rook(myarray);
+        else if (Objects.equals(piece.getText(), "\u2656 ")) {
+            piece.rook(myarray,"\u2656 ","Black");
         }
-        else if (Objects.equals(this.getText(), "\u2658 ")) {
-            this.white_knight(myarray);
+        else if (Objects.equals(piece.getText(), "\u2658 ")) {
+            piece.knight(myarray,"\u2658 ","White");
         }
-        else if (Objects.equals(this.getText(), "\u2655 ")) {
-            this.white_queen(myarray);
+        else if (Objects.equals(piece.getText(), "\u2655 ")) {//White
+            piece.queen(myarray,"\u2655 ", "Black" );
         }
-        else if (Objects.equals(this.getText(), "\u2654 ")) {
-            this.white_king(myarray);
+        else if (Objects.equals(piece.getText(), "\u2654 ")) {
+            piece.king(myarray,"\u2654 ","White");
         }
-        else if(Objects.equals(this.getText(), "\u265F ")) {
-            this.black_pawn(myarray);
+        else if(Objects.equals(piece.getText(), "\u265F ")) {
+            piece.pawn(myarray,"Black");
         }
-        else if(Objects.equals(this.getText(), "\u265C ")) {
-            this.black_rook(myarray);
+        else if(Objects.equals(piece.getText(), "\u265C ")) {
+            piece.rook(myarray,"\u265C ","White");
         }
-        else if(Objects.equals(this.getText(), "\u265E ")) {
-            this.black_knight(myarray);
+        else if(Objects.equals(piece.getText(), "\u265E ")) {
+            piece.knight(myarray,"\u265E ", "Black" );
         }
-        else if(Objects.equals(this.getText(), "\u265D ")) {
-            this.black_bishop(myarray);
+        else if(Objects.equals(piece.getText(), "\u265D ")) {
+            piece.bishop(myarray,"\u265D ","White");
         }
-        else if(Objects.equals(this.getText(), "\u265B ")) {
-            this.black_queen(myarray);}
+        else if(Objects.equals(piece.getText(), "\u265B ")) {
+            piece.queen(myarray,"\u265B ", "White");}
 
-        else {System.out.println("bad luck");
+        else if (Objects.equals(piece.getText(), "\u265A ")) {
+            piece.king(myarray,"\u265A ","Black");
         }
     }
 
 
-    public void white_checkmate(Square[][] myarray) {
-        //arrives as board with pink as activated by checking piece
+    public void checkmate(Square[][] myarray) {
+        //Creates virtual array
+        int moves_counter=0;
+        int checkmate_counter=0;
+        VirtualSquare[][] virtualarray = new VirtualSquare[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-//board is returned to black and white
+                Square val = myarray[i][j];
+                VirtualSquare virt_square = new VirtualSquare(val.y,val.x, val.alge_notation,val.activating_piece,val.original_color,val.getText(),val.getBackground());
+                virtualarray[i][j] = virt_square;
             }
         }
-        Integer howmany=0;
+        //Virtual array initialised
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (Objects.equals(myarray[i][j].piece_color, "Black")) {
-                    Square[][] copy_myarray = myarray.clone();
-                    Square square_of_interest = copy_myarray[i][j];
-                    if (Objects.equals(square_of_interest.getText(), "\u265F ")) {
-                        square_of_interest.black_pawn(copy_myarray);
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265D ")) {
-                        square_of_interest.black_bishop(copy_myarray);
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265C ")) {
-                        square_of_interest.black_rook(copy_myarray);
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265E ")) {
-                        square_of_interest.black_knight(copy_myarray);
-                    } else if (Objects.equals(square_of_interest.getText(), "\u265B ")) {
-                        square_of_interest.black_queen(copy_myarray);
-                    }
-                    //board will now have pink squares due to black activation
-                    //the following acitvates the
-                    howmany = howmany + 1;
+                if (virtualarray[i][j].piece_color=="Black") {
+                    VirtualSquare.outp(virtualarray,virtualarray[i][j]);
+                    //All black pieces activated
                     for (int i1 = 0; i1 < 8; i1++) {
                         for (int j1 = 0; j1 < 8; j1++) {
-                            if (copy_myarray[i1][j1].getBackground()==Color.pink) {
-                                Square[][] copy_copy_myarray = copy_myarray.clone();
-
-                                Square square_of_interest2 = copy_myarray[i1][j1];
-                                if (square_of_interest2.getText() == null){
-                                    square_of_interest2.blank(copy_copy_myarray );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
+                            if (virtualarray[i1][j1].Background==Color.pink) {
+                                VirtualSquare[][] copy_virtualarray = new VirtualSquare[8][8];
+                                for (int i2 = 0; i2 < 8; i2++) {
+                                    for (int j2 = 0; j2 < 8; j2++) {
+                                        VirtualSquare n = virtualarray[i2][j2];
+                                        VirtualSquare val = new VirtualSquare(n.y,n.x,n.alge_notation,n.activating_piece,n.original_color,
+                                                n.Text,n.Background);
+                                        copy_virtualarray[i2][j2]= val;
+                                    }
                                 }
-                                else if(Objects.equals(square_of_interest2.getText(), "\u2659 ")) {
-                                    square_of_interest2.white_pawn(copy_copy_myarray );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-
-                                }
-                                else if(Objects.equals(square_of_interest2.getText(), "\u2657 ")) {
-                                    square_of_interest2.white_bishop(copy_copy_myarray );
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2656 ")) {
-                                    square_of_interest2.white_rook(copy_copy_myarray);
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2658 ")) {
-                                    square_of_interest2.white_knight(copy_copy_myarray);
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2655 ")) {
-                                    square_of_interest2.white_queen(copy_copy_myarray);
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
-                                }
-                                else if (Objects.equals(square_of_interest2.getText(), "\u2654 ")) {
-                                    square_of_interest2.white_king(copy_copy_myarray);
-                                    for (int i2 = 0; i2 < 8; i2++) {
-                                        for (int j2 = 0; j2 < 8; j2++) {
-                                            prelim_white_check(copy_copy_myarray,copy_copy_myarray[i2][j2]);
-
-                                        }}
+                                for (int i2 = 0; i2 < 8; i2++) {
+                                    for (int j2 = 0; j2 < 8; j2++) {
+                                        if (virtualarray[i2][j2].activating_Square_!=null) {
+                                            VirtualSquare ob = virtualarray[i2][j2].activating_Square_;
+                                            copy_virtualarray[i2][j2].activating_Square_=new VirtualSquare(ob.y,ob.x,
+                                                    ob.alge_notation,ob.activating_piece,ob.original_color,
+                                                    ob.Text,ob.Background);
+                                        }
+                                    }
                                 }
 
-
+                                moves_counter=moves_counter+1;
+                                VirtualSquare.outp(copy_virtualarray,copy_virtualarray[i1][j1]);
+                                VirtualSquare.update_board(copy_virtualarray);
+                                checkmate_counter = checkmate_counter + VirtualSquare.check_loop(copy_virtualarray);
                             }
                         }
+                        }
+                    VirtualSquare.update_board(virtualarray);
                     }
-                }
             }
         }
-  }
+        if (checkmate_counter == moves_counter) {System.out.println("Checkmate");
+            System.exit(0);}
+        System.out.println(moves_counter);
+        System.out.println(checkmate_counter);
+    }
 
 
-    public void prelim_white_check(Square[][] myarray, Square piece) {
-        if (Objects.equals(piece.getText(), "\u2659 ")) {
-            piece.white_pawn(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2657 ")) {
-            piece.white_bishop(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2656 ")) {
-            piece.white_rook(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2658 ")) {
-            this.white_knight(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2655 ")) {
-            this.white_queen(myarray);
-        }
 
+    public void check(Square[][] myarray, Square piece) {
+        outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-                    System.out.println("CHECK AGAIN");
+                    System.out.println("Black is in check - reality");
+                    update_board(myarray);
+                    //sends it as black and white
+
+                    checkmate(myarray);
                 }
-                else if (myarray[i][j].getBackground()==Color.pink && !Objects.equals(myarray[i][j].getText(), "\u265A ")) {
-                    System.out.println("Not a check");
+                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
+                    System.out.println("White is in check - reality");
+                    update_board(myarray);
 
                 }
 
             }}
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-            }}
-
+        update_board(myarray);
 
     }
-
-
-
-
-    public void white_check(Square[][] myarray, Square piece) {
-         if (Objects.equals(piece.getText(), "\u2659 ")) {
-            piece.white_pawn(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2657 ")) {
-            piece.white_bishop(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2656 ")) {
-            piece.white_rook(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2658 ")) {
-            this.white_knight(myarray);
-        } else if (Objects.equals(piece.getText(), "\u2655 ")) {
-            this.white_queen(myarray);
-        }
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].getBackground()==Color.pink && myarray[i][j].getText()=="\u265A "){
-                    System.out.println("CHECK");
-                    white_checkmate(myarray);
-
-                }
-
-            }}
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                myarray[i][j].setBackground(myarray[i][j].original_color);
-                myarray[i][j].piece_color=piece_color_func(myarray[i][j].piece_color);
-            }}
-
-
-    }
-
 
     static HashMap<String,String> starting_positions() {
         HashMap<String,String> starting_layout = new HashMap<String,String>();
@@ -1650,19 +681,12 @@ public class Square extends JButton{
         return starting_layout;
     }
 
-    Square(String word,Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
+    Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
         setText(word);
         setBackground(colour);
         this.y = Y_coord;
         this.x = X_coord;
         this.alge_notation = alge_notation;
     }
-
-    public static void main(String[] args) {
-
-
-    }
-
-
 
 }

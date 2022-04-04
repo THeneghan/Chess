@@ -2,9 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Viewer {
@@ -55,7 +52,7 @@ public class Viewer {
                     square.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            square.outp(myarray);
+                            square.outp(myarray,square);
                         }
                     });
                 pnl.add(square);}
@@ -66,7 +63,7 @@ public class Viewer {
                     square.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            square.outp(myarray);
+                            square.outp(myarray,square);
                         }
                     });
                     pnl.add(square);
@@ -76,14 +73,14 @@ public class Viewer {
             y_coord=y_coord-1;
         }
 
-        HashMap<String,String > starting_board=Square.starting_positions();
+        HashMap<String,String > starting_board= Square.starting_positions();
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 String key = myarray[i][j].alge_notation;
                 String chess_piece =starting_board.get(key);
                 myarray[i][j].setText(chess_piece);
-                myarray[i][j].piece_color=Square.piece_color_func(myarray[i][j].getText());
+                myarray[i][j].piece_color= Square.piece_color_func(myarray[i][j].getText());
 
 
             }

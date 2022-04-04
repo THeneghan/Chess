@@ -18,26 +18,16 @@ public class Viewer {
         color_assist.put("F",1);
         color_assist.put("G",0);
         color_assist.put("H",1);
-
-
-
-
-
-
-
-        JFrame brd = new JFrame("My Chess GUI");
-        brd.setSize(300,300);
-        brd.setLayout(new FlowLayout(FlowLayout.CENTER));
-        brd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel pnl = new JPanel();
-
-        //pnl.setSize(100,100);
-        pnl.setPreferredSize(new Dimension(400, 400));
-        pnl.setBackground(Color.CYAN);
-        pnl.setLayout(new GridLayout(8,8,0,0));
+        JFrame board = new JFrame("My Chess GUI");
+        board.setSize(300,300);
+        board.setLayout(new FlowLayout(FlowLayout.CENTER));
+        board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(400, 400));
+        panel.setBackground(Color.CYAN);
+        panel.setLayout(new GridLayout(8,8,0,0));
         Square[][] myarray = new Square[8][8];
         Integer y_coord=7;
-
         for (Integer number: numbers) {
             Integer x_coord=0;
             for (String letter:letters) {
@@ -55,7 +45,7 @@ public class Viewer {
                             square.outp(myarray,square);
                         }
                     });
-                pnl.add(square);}
+                panel.add(square);}
                 else {
                     Square square = new Square(null,Color.BLACK, y_coord,x_coord, notation);
                     square.original_color=Color.BLACK;
@@ -66,26 +56,22 @@ public class Viewer {
                             square.outp(myarray,square);
                         }
                     });
-                    pnl.add(square);
+                    panel.add(square);
                 }
                 x_coord=x_coord+1;
             }
             y_coord=y_coord-1;
         }
-
         HashMap<String,String > starting_board= Square.starting_positions();
-
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 String key = myarray[i][j].alge_notation;
                 String chess_piece =starting_board.get(key);
                 myarray[i][j].setText(chess_piece);
                 myarray[i][j].piece_color= Square.piece_color_func(myarray[i][j].getText());
-
-
             }
         }
-        brd.add(pnl);
-        brd.setVisible(true);
+        board.add(panel);
+        board.setVisible(true);
     }
 }

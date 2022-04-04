@@ -144,8 +144,6 @@ public class Square extends JButton{
 
         }
         else{ pink_square(myarray, this);}
-
-
     }
 
 
@@ -153,11 +151,8 @@ public class Square extends JButton{
     public void bishop(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
             update_board(myarray);
-
-
         Integer orig_x = this.x;
         Integer orig_y = this.y;
-
         for (int i = 1; i <= 8; i = i + 1) {
             Integer less_than_8y=orig_y+i;
             Integer less_than_8x=orig_x+i;

@@ -556,7 +556,6 @@ public class VirtualSquare {
                     //System.out.println("White is in check");
                     return 0;
                 }
-
             }}
         update_board(myarray);
     return 0;

@@ -12,6 +12,14 @@ public class Square extends JButton{
     Square activating_Square_;
     String piece_color = piece_color_func(this.getText());
 
+    Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
+        setText(word);
+        setBackground(colour);
+        this.y = Y_coord;
+        this.x = X_coord;
+        this.alge_notation = alge_notation;
+    }
+
     static String piece_color_func(String val) {
         if (Objects.equals(val, "\u2659 ") || Objects.equals(val, "\u2654 ") || Objects.equals(val, "\u2655 ")
                 || Objects.equals(val, "\u2656 ") || Objects.equals(val, "\u2657 ") || Objects.equals(val, "\u2658 ")) {
@@ -24,12 +32,51 @@ public class Square extends JButton{
         else {return null;}
     }
 
-    public void check_loop(Square[][] myarray) {
+    static HashMap<String,String> starting_positions() {
+        HashMap<String,String> starting_layout = new HashMap<String,String>();
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H"};
+        Integer[] numbers = {8,7,6,5,4,3,2,1};
 
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                check(myarray,myarray[i][j]);
-            }}
+        for (Integer number: numbers) {
+            for (String letter:letters) {
+                String string_number = number.toString();
+                String notation = letter + string_number;
+                starting_layout.put(notation,null);
+            }
+        }
+        starting_layout.put("A1","\u2656 ");
+        starting_layout.put("B1","\u2658 ");
+        starting_layout.put("C1","\u2657 ");
+        starting_layout.put("D1","\u2655 ");
+        starting_layout.put("E1","\u2654 ");
+        starting_layout.put("F1","\u2657 ");
+        starting_layout.put("G1","\u2658 ");
+        starting_layout.put("H1","\u2656 ");
+        starting_layout.put("A2","\u2659 ");
+        starting_layout.put("B2","\u2659 ");
+        starting_layout.put("C2","\u2659 ");
+        starting_layout.put("D2","\u2659 ");
+        starting_layout.put("E2","\u2659 ");
+        starting_layout.put("F2","\u2659 ");
+        starting_layout.put("G2","\u2659 ");
+        starting_layout.put("H2","\u2659 ");
+        starting_layout.put("A7","\u265F ");
+        starting_layout.put("B7","\u265F ");
+        starting_layout.put("C7","\u265F ");
+        starting_layout.put("D7","\u265F ");
+        starting_layout.put("E7","\u265F ");
+        starting_layout.put("F7","\u265F ");
+        starting_layout.put("G7","\u265F ");
+        starting_layout.put("H7","\u265F ");
+        starting_layout.put("A8","\u265C ");
+        starting_layout.put("B8","\u265E ");
+        starting_layout.put("C8","\u265D ");
+        starting_layout.put("D8","\u265B ");
+        starting_layout.put("E8","\u265A ");
+        starting_layout.put("F8","\u265D ");
+        starting_layout.put("G8","\u265E ");
+        starting_layout.put("H8","\u265C ");
+        return starting_layout;
     }
 
     public void pink_square(Square[][] myarray, Square piece){
@@ -146,8 +193,6 @@ public class Square extends JButton{
         else{ pink_square(myarray, this);}
     }
 
-
-
     public void bishop(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
             update_board(myarray);
@@ -178,7 +223,6 @@ public class Square extends JButton{
                 if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
                     if (myarray[orig_y-i][orig_x+i].piece_color==opp_colour) {
                         activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
-
                         break;
                     }
                     break;}
@@ -281,8 +325,6 @@ public class Square extends JButton{
                 }
 
             }
-
-
 
     public void rook(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground()!=Color.pink) {
@@ -504,7 +546,6 @@ public class Square extends JButton{
 
     }
 
-
     public void outp(Square[][] myarray, Square piece) {
         if (piece.getText() == null){
             piece.blank(myarray);}
@@ -546,6 +587,34 @@ public class Square extends JButton{
         }
     }
 
+    public void check(Square[][] myarray, Square piece) {
+        outp(myarray, piece);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
+                    System.out.println("Black is in check - reality");
+                    update_board(myarray);
+                    //sends it as black and white
+
+                    checkmate(myarray);
+                }
+                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
+                    System.out.println("White is in check - reality");
+                    update_board(myarray);
+
+                }
+
+            }}
+        update_board(myarray);
+    }
+
+    public void check_loop(Square[][] myarray) {
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                check(myarray,myarray[i][j]);
+            }}
+    }
 
     public void checkmate(Square[][] myarray) {
         //Creates virtual array
@@ -599,89 +668,10 @@ public class Square extends JButton{
                     }
             }
         }
-        if (checkmate_counter == moves_counter) {System.out.println("Checkmate");
+        if (checkmate_counter >= moves_counter) {System.out.println("Checkmate");
             System.exit(0);}
         System.out.println(moves_counter);
         System.out.println(checkmate_counter);
-    }
-
-
-
-    public void check(Square[][] myarray, Square piece) {
-        outp(myarray, piece);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-                    System.out.println("Black is in check - reality");
-                    update_board(myarray);
-                    //sends it as black and white
-
-                    checkmate(myarray);
-                }
-                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
-                    System.out.println("White is in check - reality");
-                    update_board(myarray);
-
-                }
-
-            }}
-        update_board(myarray);
-
-    }
-
-    static HashMap<String,String> starting_positions() {
-        HashMap<String,String> starting_layout = new HashMap<String,String>();
-        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H"};
-        Integer[] numbers = {8,7,6,5,4,3,2,1};
-
-        for (Integer number: numbers) {
-            for (String letter:letters) {
-                String string_number = number.toString();
-                String notation = letter + string_number;
-                starting_layout.put(notation,null);
-            }
-        }
-        starting_layout.put("A1","\u2656 ");
-        starting_layout.put("B1","\u2658 ");
-        starting_layout.put("C1","\u2657 ");
-        starting_layout.put("D1","\u2655 ");
-        starting_layout.put("E1","\u2654 ");
-        starting_layout.put("F1","\u2657 ");
-        starting_layout.put("G1","\u2658 ");
-        starting_layout.put("H1","\u2656 ");
-        starting_layout.put("A2","\u2659 ");
-        starting_layout.put("B2","\u2659 ");
-        starting_layout.put("C2","\u2659 ");
-        starting_layout.put("D2","\u2659 ");
-        starting_layout.put("E2","\u2659 ");
-        starting_layout.put("F2","\u2659 ");
-        starting_layout.put("G2","\u2659 ");
-        starting_layout.put("H2","\u2659 ");
-        starting_layout.put("A7","\u265F ");
-        starting_layout.put("B7","\u265F ");
-        starting_layout.put("C7","\u265F ");
-        starting_layout.put("D7","\u265F ");
-        starting_layout.put("E7","\u265F ");
-        starting_layout.put("F7","\u265F ");
-        starting_layout.put("G7","\u265F ");
-        starting_layout.put("H7","\u265F ");
-        starting_layout.put("A8","\u265C ");
-        starting_layout.put("B8","\u265E ");
-        starting_layout.put("C8","\u265D ");
-        starting_layout.put("D8","\u265B ");
-        starting_layout.put("E8","\u265A ");
-        starting_layout.put("F8","\u265D ");
-        starting_layout.put("G8","\u265E ");
-        starting_layout.put("H8","\u265C ");
-        return starting_layout;
-    }
-
-    Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
-        setText(word);
-        setBackground(colour);
-        this.y = Y_coord;
-        this.x = X_coord;
-        this.alge_notation = alge_notation;
     }
 
 }

@@ -43,14 +43,12 @@ public class VirtualSquare {
         myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].Text);
     }
 
-
     public void blank(VirtualSquare[][] myarray) {
         if (this.Background!=Color.pink) {
             update_board(myarray);
         }
         else { pink_square(myarray, this); }
     }
-
 
     public void bishop(VirtualSquare[][] myarray, String colour, String opp_colour) {
         if (this.Background!=Color.pink){
@@ -125,19 +123,6 @@ public class VirtualSquare {
 
             }}
         else{ pink_square(myarray, this);}
-
-    }
-
-    public static void pink_square2(VirtualSquare[][] myarray, Integer i, Integer j){
-
-        myarray[i][j].Text=(myarray[i][j].activating_piece);
-        myarray[i][j].piece_color=piece_color_func(myarray[i][j].Text);
-        myarray[i][j].Background=(myarray[i][j].original_color);
-        myarray[i][j].activating_Square_.Text=(null);
-        myarray[i][j].activating_piece=null;
-        myarray[i][j].activating_Square_=null;
-        //check_loop(myarray);
-        //update_board(myarray);
 
     }
 
@@ -498,9 +483,6 @@ public class VirtualSquare {
 
     }
 
-
-
-
     public static void outp(VirtualSquare[][] myarray, VirtualSquare piece) {
         if (piece.Text == null){
             piece.blank(myarray);}
@@ -586,7 +568,6 @@ public class VirtualSquare {
 
     }
 
-
     VirtualSquare(Integer y1,Integer x1, String alge_not,String acti_piece, Color ori_col, String txt, Color bkgrd) {
         this.y= y1;
         this.x= x1;
@@ -600,10 +581,4 @@ public class VirtualSquare {
 
 }
 
-
-//    Color original_color;
-//    VirtualSquare activating_Square_;
-//    String Text;
-//    String piece_color;
-//    Color Background;
 

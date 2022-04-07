@@ -11,6 +11,7 @@ public class Square extends JButton{
     Color original_color;
     Square activating_Square_;
     String piece_color = piece_color_func(this.getText());
+    Boolean activateable;
 
     Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
         setText(word);
@@ -84,16 +85,19 @@ public class Square extends JButton{
         piece.setText(piece.activating_piece);
         piece.piece_color=piece_color_func(piece.getText());
         piece.setBackground(piece.original_color);
+        piece.activateable=Boolean.TRUE;
+
         piece.activating_Square_.setText(null);
+        piece.activating_Square_.activateable=null;
         piece.activating_piece=null;
         piece.activating_Square_=null;
         update_board(myarray);
-        check_loop(myarray);
+        //check_loop(myarray);
 
 
     }
 
-    public void update_board(Square[][] myarray) {
+    public void special_update_board(Square[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -105,9 +109,25 @@ public class Square extends JButton{
 
     }
 
+    public void update_board(Square[][] myarray) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                myarray[i][j].setBackground(myarray[i][j].original_color);
+                myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
+                myarray[i][j].activating_piece=null;
+                myarray[i][j].activating_Square_=null;
+                if (myarray[i][j].activateable == Boolean.TRUE){
+                   myarray[i][j].activateable = Boolean.FALSE;}
+                else if (myarray[i][j].activateable == Boolean.FALSE)
+                {myarray[i][j].activateable = Boolean.TRUE;}
+
+            }}
+
+    }
+
     public void blank(Square[][] myarray) {
         if (this.getBackground()!=Color.pink) {
-            update_board(myarray);
+            //special_update_board(myarray);
         }
         else { pink_square(myarray, this); }
     }
@@ -121,7 +141,7 @@ public class Square extends JButton{
 
     public void pawn(Square[][] myarray, String colour) {
         if (this.getBackground()!=Color.pink) {
-            update_board(myarray);
+            special_update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
 
@@ -549,72 +569,72 @@ public class Square extends JButton{
     public void outp(Square[][] myarray, Square piece) {
         if (piece.getText() == null){
             piece.blank(myarray);}
-        else if(Objects.equals(piece.getText(), "\u2659 ")) {
+        else if(Objects.equals(piece.getText(), "\u2659 ")& piece.activateable == Boolean.TRUE) {
             piece.pawn(myarray,"White");
         }
-        else if(Objects.equals(piece.getText(), "\u2657 ")) {
+        else if(Objects.equals(piece.getText(), "\u2657 ")& piece.activateable == Boolean.TRUE) {
             piece.bishop(myarray,"\u2657 ","Black");
         }
-        else if (Objects.equals(piece.getText(), "\u2656 ")) {
+        else if (Objects.equals(piece.getText(), "\u2656 ")& piece.activateable == Boolean.TRUE) {
             piece.rook(myarray,"\u2656 ","Black");
         }
-        else if (Objects.equals(piece.getText(), "\u2658 ")) {
+        else if (Objects.equals(piece.getText(), "\u2658 ")& piece.activateable == Boolean.TRUE) {
             piece.knight(myarray,"\u2658 ","White");
         }
-        else if (Objects.equals(piece.getText(), "\u2655 ")) {//White
+        else if (Objects.equals(piece.getText(), "\u2655 ")& piece.activateable == Boolean.TRUE) {//White
             piece.queen(myarray,"\u2655 ", "Black" );
         }
-        else if (Objects.equals(piece.getText(), "\u2654 ")) {
+        else if (Objects.equals(piece.getText(), "\u2654 ")& piece.activateable == Boolean.TRUE) {
             piece.king(myarray,"\u2654 ","White");
         }
-        else if(Objects.equals(piece.getText(), "\u265F ")) {
+        else if(Objects.equals(piece.getText(), "\u265F ")& piece.activateable == Boolean.TRUE) {
             piece.pawn(myarray,"Black");
         }
-        else if(Objects.equals(piece.getText(), "\u265C ")) {
+        else if(Objects.equals(piece.getText(), "\u265C ")& piece.activateable == Boolean.TRUE) {
             piece.rook(myarray,"\u265C ","White");
         }
-        else if(Objects.equals(piece.getText(), "\u265E ")) {
+        else if(Objects.equals(piece.getText(), "\u265E ")& piece.activateable == Boolean.TRUE) {
             piece.knight(myarray,"\u265E ", "Black" );
         }
-        else if(Objects.equals(piece.getText(), "\u265D ")) {
+        else if(Objects.equals(piece.getText(), "\u265D ")& piece.activateable == Boolean.TRUE) {
             piece.bishop(myarray,"\u265D ","White");
         }
-        else if(Objects.equals(piece.getText(), "\u265B ")) {
+        else if(Objects.equals(piece.getText(), "\u265B ")& piece.activateable == Boolean.TRUE) {
             piece.queen(myarray,"\u265B ", "White");}
 
-        else if (Objects.equals(piece.getText(), "\u265A ")) {
+        else if (Objects.equals(piece.getText(), "\u265A ")& piece.activateable == Boolean.TRUE) {
             piece.king(myarray,"\u265A ","Black");
         }
-    }
 
-    public void check(Square[][] myarray, Square piece) {
-        outp(myarray, piece);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-                    System.out.println("Black is in check - reality");
-                    update_board(myarray);
-                    //sends it as black and white
+        }
 
-                    checkmate(myarray);
-                }
-                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
-                    System.out.println("White is in check - reality");
-                    update_board(myarray);
+//    public void check(Square[][] myarray, Square piece) {
+//        outp(myarray, piece);
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
+//                    System.out.println("Black is in check - reality");
+//                    update_board(myarray);
+//                    //sends it as black and white
+//                    //checkmate(myarray);
+//                }
+//                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
+//                    System.out.println("White is in check - reality");
+//                    update_board(myarray);
+//
+//                }
+//
+//            }}
+//        update_board(myarray);
+//    }
 
-                }
-
-            }}
-        update_board(myarray);
-    }
-
-    public void check_loop(Square[][] myarray) {
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                check(myarray,myarray[i][j]);
-            }}
-    }
+//    public void check_loop(Square[][] myarray) {
+//
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                check(myarray,myarray[i][j]);
+//            }}
+//    }
 
     public void checkmate(Square[][] myarray) {
         //Creates virtual array

@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Viewer {
 
@@ -39,23 +40,13 @@ public class Viewer {
                     Square square = new Square(null,Color.WHITE, y_coord, x_coord, notation);
                     square.original_color= Color.WHITE;
                     myarray[y_coord][x_coord]=square;
-                    square.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            square.outp(myarray,square);
-                        }
-                    });
+
+
                 panel.add(square);}
                 else {
                     Square square = new Square(null,Color.BLACK, y_coord,x_coord, notation);
                     square.original_color=Color.BLACK;
                     myarray[y_coord][x_coord]=square;
-                    square.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            square.outp(myarray,square);
-                        }
-                    });
                     panel.add(square);
                 }
                 x_coord=x_coord+1;
@@ -69,6 +60,19 @@ public class Viewer {
                 String chess_piece =starting_board.get(key);
                 myarray[i][j].setText(chess_piece);
                 myarray[i][j].piece_color= Square.piece_color_func(myarray[i][j].getText());
+                if (Objects.equals(myarray[i][j].piece_color, "White")) {
+                    myarray[i][j].activateable = Boolean.TRUE;
+                }
+                else if (Objects.equals(myarray[i][j].piece_color, "Black")) {
+                    myarray[i][j].activateable = Boolean.FALSE;
+                }
+                Square square =myarray[i][j];
+                square.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        square.outp(myarray,square);
+                    }
+                });
             }
         }
         board.add(panel);

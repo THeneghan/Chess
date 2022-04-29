@@ -12,6 +12,7 @@ public class Square extends JButton{
     Square activating_Square_;
     String piece_color = piece_color_func(this.getText());
     Boolean activateable;
+    Boolean text_activateable;
 
     Square(String word, Color colour, Integer Y_coord, Integer X_coord, String alge_notation) {
         setText(word);
@@ -83,18 +84,20 @@ public class Square extends JButton{
     public void pink_square(Square[][] myarray, Square piece){
 
         piece.setText(piece.activating_piece);
+        System.out.println(piece.activating_piece);
         piece.piece_color=piece_color_func(piece.getText());
         piece.setBackground(piece.original_color);
         piece.activateable=Boolean.TRUE;
+        piece.text_activateable=null;
 
         piece.activating_Square_.setText(null);
         piece.activating_Square_.activateable=null;
+        //piece.activating_Square_.text_activateable=null;
         piece.activating_piece=null;
         piece.activating_Square_=null;
+        special_update_board(myarray);
+        check_loop(myarray);
         update_board(myarray);
-        //check_loop(myarray);
-
-
     }
 
     public void special_update_board(Square[][] myarray) {
@@ -104,6 +107,10 @@ public class Square extends JButton{
                 myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
                 myarray[i][j].activating_piece=null;
                 myarray[i][j].activating_Square_=null;
+                if (myarray[i][j].text_activateable == Boolean.TRUE) {
+                    myarray[i][j].text_activateable=null;
+                    myarray[i][j].activateable=Boolean.FALSE;
+                }
 
             }}
 
@@ -116,6 +123,7 @@ public class Square extends JButton{
                 myarray[i][j].piece_color=piece_color_func(myarray[i][j].getText());
                 myarray[i][j].activating_piece=null;
                 myarray[i][j].activating_Square_=null;
+                myarray[i][j].text_activateable=null;
                 if (myarray[i][j].activateable == Boolean.TRUE){
                    myarray[i][j].activateable = Boolean.FALSE;}
                 else if (myarray[i][j].activateable == Boolean.FALSE)
@@ -127,7 +135,7 @@ public class Square extends JButton{
 
     public void blank(Square[][] myarray) {
         if (this.getBackground()!=Color.pink) {
-            //special_update_board(myarray);
+            special_update_board(myarray);
         }
         else { pink_square(myarray, this); }
     }
@@ -136,6 +144,10 @@ public class Square extends JButton{
         myarray[i][j].setBackground(Color.pink);
         myarray[i][j].activating_piece = piece;
         myarray[i][j].activating_Square_ = myarray[orig_y][orig_x];
+        myarray[i][j].activateable=Boolean.TRUE;
+        if (myarray[i][j].getText()!= null) {
+            myarray[i][j].text_activateable = Boolean.TRUE;
+        }
         myarray[orig_y][orig_x].piece_color=piece_color_func(myarray[orig_y][orig_x].getText());
     }
 
@@ -146,11 +158,8 @@ public class Square extends JButton{
             Integer orig_y = this.y;
 
             if (colour == "Black") {
-
             for (int i = this.y-1; i >= this.y-1; i = i - 1) {
                 if (i+1==0) {break;}
-
-
                 if (this.x -1>=0 && (Objects.equals(myarray[i][this.x - 1].piece_color, "White"))) {
                     activate_square_pink(myarray, i,this.x-1,orig_y,orig_x,"\u265F ");
                 }
@@ -175,9 +184,7 @@ public class Square extends JButton{
                 }
 
             }}
-
             else if(colour == "White") {
-
                 for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
                     if (i==8) {break;}
                     if (this.x - 1 >= 0 && (myarray[i][this.x - 1].piece_color == "Black")) {
@@ -209,13 +216,15 @@ public class Square extends JButton{
                 }
             }
 
-        }
+            //self_check_block(myarray);
+            //
+            }
         else{ pink_square(myarray, this);}
     }
 
     public void bishop(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
-            update_board(myarray);
+            special_update_board(myarray);
         Integer orig_x = this.x;
         Integer orig_y = this.y;
         for (int i = 1; i <= 8; i = i + 1) {
@@ -286,7 +295,7 @@ public class Square extends JButton{
     }
 
     public void king(Square[][] myarray, String Colour, String opp_colour) {
-        update_board(myarray);
+        special_update_board(myarray);
         Integer orig_x = this.x;
         Integer orig_y = this.y;
         Integer less_than_8y=orig_y+1;
@@ -348,7 +357,7 @@ public class Square extends JButton{
 
     public void rook(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground()!=Color.pink) {
-            update_board(myarray);
+            special_update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -411,7 +420,7 @@ public class Square extends JButton{
 
     public void knight(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground()!=Color.pink) {
-            update_board(myarray);
+            special_update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!=opp_colour) {
@@ -445,7 +454,7 @@ public class Square extends JButton{
 
     public void queen(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground()!=Color.pink){
-            update_board(myarray);
+            special_update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -608,90 +617,83 @@ public class Square extends JButton{
 
         }
 
-//    public void check(Square[][] myarray, Square piece) {
-//        outp(myarray, piece);
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
-//                    System.out.println("Black is in check - reality");
-//                    update_board(myarray);
-//                    //sends it as black and white
-//                    //checkmate(myarray);
-//                }
-//                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
-//                    System.out.println("White is in check - reality");
-//                    update_board(myarray);
-//
-//                }
-//
-//            }}
-//        update_board(myarray);
-//    }
 
-//    public void check_loop(Square[][] myarray) {
-//
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                check(myarray,myarray[i][j]);
-//            }}
-//    }
-
-    public void checkmate(Square[][] myarray) {
-        //Creates virtual array
-        int moves_counter=0;
-        int checkmate_counter=0;
-        VirtualSquare[][] virtualarray = new VirtualSquare[8][8];
+    public void self_check_block(Square[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Square val = myarray[i][j];
-                VirtualSquare virt_square = new VirtualSquare(val.y,val.x, val.alge_notation,val.activating_piece,val.original_color,val.getText(),val.getBackground());
-                virtualarray[i][j] = virt_square;
-            }
-        }
-        //Virtual array initialised
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (virtualarray[i][j].piece_color=="Black") {
-                    VirtualSquare.outp(virtualarray,virtualarray[i][j]);
-                    //All black pieces activated
+                if (val.getBackground() == Color.pink) {
+                    VirtualSquare[][] virtualarray = new VirtualSquare[8][8];
                     for (int i1 = 0; i1 < 8; i1++) {
                         for (int j1 = 0; j1 < 8; j1++) {
-                            if (virtualarray[i1][j1].Background==Color.pink) {
-                                VirtualSquare[][] copy_virtualarray = new VirtualSquare[8][8];
-                                for (int i2 = 0; i2 < 8; i2++) {
-                                    for (int j2 = 0; j2 < 8; j2++) {
-                                        VirtualSquare n = virtualarray[i2][j2];
-                                        VirtualSquare val = new VirtualSquare(n.y,n.x,n.alge_notation,n.activating_piece,n.original_color,
-                                                n.Text,n.Background);
-                                        copy_virtualarray[i2][j2]= val;
-                                    }
-                                }
-                                for (int i2 = 0; i2 < 8; i2++) {
-                                    for (int j2 = 0; j2 < 8; j2++) {
-                                        if (virtualarray[i2][j2].activating_Square_!=null) {
-                                            VirtualSquare ob = virtualarray[i2][j2].activating_Square_;
-                                            copy_virtualarray[i2][j2].activating_Square_=new VirtualSquare(ob.y,ob.x,
-                                                    ob.alge_notation,ob.activating_piece,ob.original_color,
-                                                    ob.Text,ob.Background);
+                            Square vald = myarray[i1][j1];
+                            VirtualSquare virt_square = new VirtualSquare(vald.y, vald.x, vald.alge_notation, vald.activating_piece, vald.original_color, vald.getText(), vald.getBackground());
+                            virtualarray[i1][j1] = virt_square;
+                        }
+                    }
+                    Square acti = val.activating_Square_;
+                    virtualarray[i][j].activating_Square_= new VirtualSquare(acti.y, acti.x, acti.alge_notation, acti.activating_piece,
+                            acti.original_color, acti.getText(), acti.getBackground());
+                    VirtualSquare.outp(virtualarray, virtualarray[i][j]);
+                    for (int i2 = 0; i2 < 8; i2++) {
+                        for (int j2 = 0; j2 < 8; j2++) {
+                            VirtualSquare.outp(virtualarray, virtualarray[i2][j2]);
+                            for (int i3 = 0; i3 < 8; i3++) {
+                                for (int j3 = 0; j3 < 8; j3++) {
+                                    if (virtualarray[i3][j3].Background == Color.pink && Objects.equals(virtualarray[i3][j3].Text, "\u265A ")) {
+                                        myarray[i2][j2].setBackground(myarray[i2][j2].original_color);
+                                        myarray[i2][j2].piece_color = piece_color_func(myarray[i2][j2].getText());
+                                        myarray[i2][j2].activating_piece = null;
+                                        myarray[i2][j2].activating_Square_ = null;
+                                        if (myarray[i2][j2].text_activateable == Boolean.TRUE) {
+                                            myarray[i2][j2].text_activateable = null;
+                                            myarray[i2][j2].activateable = Boolean.FALSE;
                                         }
                                     }
                                 }
-
-                                moves_counter=moves_counter+1;
-                                VirtualSquare.outp(copy_virtualarray,copy_virtualarray[i1][j1]);
-                                VirtualSquare.update_board(copy_virtualarray);
-                                checkmate_counter = checkmate_counter + VirtualSquare.check_loop(copy_virtualarray);
                             }
+                            for (int i4 = 0; i4 < 8; i4++) {
+                                for (int j4 = 0; j4 < 8; j4++) {
+                                    virtualarray[i4][j4].Background=virtualarray[i4][j4].original_color;
+                                    virtualarray[i4][j4].piece_color=VirtualSquare.piece_color_func(virtualarray[i4][j4].Text);
+                                    virtualarray[i4][j4].activating_piece = null;
+                                    virtualarray[i4][j4].activating_Square_ = null;
+                                }}
                         }
-                        }
-                    VirtualSquare.update_board(virtualarray);
                     }
+                }
             }
         }
-        if (checkmate_counter >= moves_counter) {System.out.println("Checkmate");
-            System.exit(0);}
-        System.out.println(moves_counter);
-        System.out.println(checkmate_counter);
     }
 
-}
+
+    public void check(Square[][] myarray, Square piece) {
+        //piece.activateable=Boolean.TRUE;
+        outp(myarray, piece);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u265A ")){
+                    System.out.println("Black is in check - reality");
+                    special_update_board(myarray);
+                    //sends it as black and white
+                    //checkmate(myarray);
+                }
+                else if (myarray[i][j].getBackground()==Color.pink && Objects.equals(myarray[i][j].getText(), "\u2654 ")){
+                    System.out.println("White is in check - reality");
+                    special_update_board(myarray);
+
+                }
+
+            }}
+        special_update_board(myarray);
+    }
+
+    public void check_loop(Square[][] myarray) {
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                check(myarray,myarray[i][j]);
+            }}
+    }}
+
+

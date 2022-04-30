@@ -524,46 +524,82 @@ public class VirtualSquare {
         }
     }
 
-    public static Integer check(VirtualSquare[][] myarray, VirtualSquare piece) {
+    public static void check(VirtualSquare[][] myarray, VirtualSquare piece) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+                for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
                     System.out.println("Black is in check");
                     update_board(myarray);
-                    return 1;
-                    //sends it as black and white
                 }
                 else if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
-                    //System.out.println("White is in check");
-                    return 0;
+                    System.out.println("White is in check");
+                    update_board(myarray);
                 }
             }}
         update_board(myarray);
-    return 0;
     }
 
-    public static Integer check_loop(VirtualSquare[][] myarray) {
+    public static void check_loop(VirtualSquare[][] myarray) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                VirtualSquare mysquare = myarray[i][j];
+                check(myarray,mysquare);
+            }}
 
-        Integer counter=0;
+    }
+
+    public static void self_check_loop1(VirtualSquare[][] myarray) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                VirtualSquare mysquare = myarray[i][j];
+                selfcheck(myarray,mysquare);
+            }}
+
+    }
+
+    public static void selfcheck(VirtualSquare[][] myarray, VirtualSquare piece) {
+        outp(myarray, piece);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (myarray[i][j].Background==Color.pink) {
+                    System.out.println("pinker");
+                    System.out.println(myarray[i][j].alge_notation);
+                }
+            }}
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                counter = counter + check(myarray,myarray[i][j]);
+                if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
+                    System.out.println("Black is in self check");
+                    update_board(myarray);
+                }
             }}
-    return counter;}
+        update_board(myarray);
+    }
+
+
+
+
+
+
+
 
     public void pink_square(VirtualSquare[][] myarray, VirtualSquare piece){
-
+        System.out.println("Activating piece is");
+        System.out.println(piece.activating_Square_.alge_notation);
         piece.Text=(piece.activating_piece);
         piece.piece_color=piece_color_func(piece.Text);
         piece.Background=(piece.original_color);
-        piece.activating_Square_.Text=(null);
+        piece.activating_Square_.Text=null;
+        System.out.println("text check should be null");
+        System.out.println(piece.activating_Square_.Text);
         piece.activating_piece=null;
         piece.activating_Square_=(null);
 
+
         //check_loop(myarray);
-        //update_board(myarray);
+        update_board(myarray);
 
 
     }

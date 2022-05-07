@@ -235,7 +235,7 @@ public class Square extends JButton {
                 }
             }
 
-            //self_check_stopper(myarray);
+            self_check_stopper(myarray);
 
         } else {
             pink_square(myarray, this);
@@ -718,7 +718,7 @@ public class Square extends JButton {
             myarray[i][j].activating_piece = null;
             myarray[i][j].activating_Square_ = null;
             myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());
-            myarray[i][j].text_activateable=Boolean.TRUE;
+            //myarray[i][j].text_activateable=Boolean.TRUE;
             //switch_player(myarray);
             //acti_square.activateable=null;
             //acti_square.text_activateable=null;

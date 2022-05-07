@@ -92,11 +92,11 @@ public class Square extends JButton {
         piece.activating_Square_.activateable = null;
         piece.activating_piece = null;
         piece.activating_Square_ = null;
-        update_board(myarray);
+        switch_player(myarray,piece);
         virtual_board_check(myarray);
     }
 
-    public void special_update_board(Square[][] myarray) {
+    public void clean_board(Square[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -113,7 +113,7 @@ public class Square extends JButton {
 
     }
 
-    public void update_board(Square[][] myarray) {
+    public void switch_player(Square[][] myarray, Square piece) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -121,9 +121,10 @@ public class Square extends JButton {
                 myarray[i][j].activating_piece = null;
                 myarray[i][j].activating_Square_ = null;
                 myarray[i][j].text_activateable = null;
-                if (myarray[i][j].activateable == Boolean.TRUE) {
+                //Far too naive, why it isn't working
+                if (Objects.equals(myarray[i][j].piece_color, piece.piece_color)) {
                     myarray[i][j].activateable = Boolean.FALSE;
-                } else if (myarray[i][j].activateable == Boolean.FALSE) {
+                } else if (!Objects.equals(myarray[i][j].piece_color, piece.piece_color)) {
                     myarray[i][j].activateable = Boolean.TRUE;
                 }
 
@@ -134,7 +135,9 @@ public class Square extends JButton {
 
     public void blank(Square[][] myarray) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            System.out.println(this.activateable);
+            System.out.println(this.text_activateable);
+            clean_board(myarray);
         } else {
             pink_square(myarray, this);
         }
@@ -144,16 +147,22 @@ public class Square extends JButton {
         myarray[i][j].setBackground(Color.pink);
         myarray[i][j].activating_piece = piece;
         myarray[i][j].activating_Square_ = myarray[orig_y][orig_x];
-        myarray[i][j].activateable = Boolean.TRUE;
+        //myarray[i][j].activateable = Boolean.TRUE;
         if (myarray[i][j].getText() != null) {
-            myarray[i][j].text_activateable = Boolean.TRUE;
+            //myarray[i][j].text_activateable = Boolean.TRUE;
+            myarray[i][j].activateable = Boolean.TRUE;
         }
+
         myarray[orig_y][orig_x].piece_color = piece_color_func(myarray[orig_y][orig_x].getText());
     }
 
     public void pawn(Square[][] myarray, String colour) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            System.out.println(this.activateable);
+            System.out.println(this.text_activateable);
+            System.out.println(this.piece_color);
+            if (this.activateable == null) {System.out.println("Equal to null");}
+            clean_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
 
@@ -226,7 +235,7 @@ public class Square extends JButton {
                 }
             }
 
-            self_check_stopper(myarray);
+            //self_check_stopper(myarray);
 
         } else {
             pink_square(myarray, this);
@@ -235,7 +244,7 @@ public class Square extends JButton {
 
     public void bishop(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            clean_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -311,7 +320,7 @@ public class Square extends JButton {
     }
 
     public void king(Square[][] myarray, String Colour, String opp_colour) {
-        special_update_board(myarray);
+        clean_board(myarray);
         Integer orig_x = this.x;
         Integer orig_y = this.y;
         Integer less_than_8y = orig_y + 1;
@@ -375,7 +384,7 @@ public class Square extends JButton {
 
     public void rook(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            clean_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -421,7 +430,7 @@ public class Square extends JButton {
 
                 if (more_than_0y >= 0) {
                     if (myarray[orig_y - i][orig_x].piece_color != null) {
-                        if (myarray[orig_y - 1][orig_x].piece_color == opp_colour) {
+                        if (myarray[orig_y - i][orig_x].piece_color == opp_colour) {
                             activate_square_pink(myarray, orig_y - i, orig_x, orig_y, orig_x, Colour);
                             break;
                         }
@@ -439,7 +448,7 @@ public class Square extends JButton {
 
     public void knight(Square[][] myarray, String Colour, String opp_colour) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            clean_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             if (orig_y + 2 <= 7 && orig_x + 1 <= 7 && myarray[orig_y + 2][orig_x + 1].piece_color != opp_colour) {
@@ -474,7 +483,7 @@ public class Square extends JButton {
 
     public void queen(Square[][] myarray, String colour, String opp_colour) {
         if (this.getBackground() != Color.pink) {
-            special_update_board(myarray);
+            clean_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
@@ -670,7 +679,6 @@ public class Square extends JButton {
                 VirtualSquare virt_square2 = virt_array[i][j];
                 if (virt_square2.Background == Color.PINK) {
                     VirtualSquare[][] copy_virtualarray = new VirtualSquare[8][8];
-                    System.out.println("copied");
                     for (int i1 = 0; i1 < 8; i1++) {
                         for (int j1 = 0; j1 < 8; j1++) {
                             VirtualSquare copy_vs = new VirtualSquare(virt_array[i1][j1].y,virt_array[i1][j1].x,virt_array[i1][j1].alge_notation,
@@ -679,19 +687,50 @@ public class Square extends JButton {
 
                         }
                     }
-                    System.out.println(myarray[i][j].activating_Square_.alge_notation);
                     Integer acti_x = myarray[i][j].activating_Square_.x;
                     Integer acti_y = myarray[i][j].activating_Square_.y;
                     copy_virtualarray[i][j].activating_Square_= copy_virtualarray[acti_y][acti_x];
                     VirtualSquare.outp(copy_virtualarray,copy_virtualarray[i][j]);
                     VirtualSquare.update_board(copy_virtualarray);
-                    VirtualSquare.self_check_loop1(copy_virtualarray);
-
-
+                    //VirtualSquare.self_check_loop1(copy_virtualarray);
+                    for (int i1 = 0; i1 < 8; i1++) {
+                        for (int j1 = 0; j1 < 8; j1++) {
+                            VirtualSquare mysquare = copy_virtualarray[i1][j1];
+                            wipe_pink(myarray,VirtualSquare.selfcheck(copy_virtualarray,mysquare),i,j);
+                        }
+                    }
                 }
+            }
+        }
+    }
 
-            }}
-}
+    public void wipe_pink(Square[][] myarray,Integer[] vals, Integer i, Integer j) {
+        Integer[] check_array = {-1,-1};
+        //System.out.println(vals[0]);
+        if (vals[0] != -1) {
+            System.out.println("Black is in self check here");
+            Integer p = vals[0];
+            Integer q = vals[1];
+            Square acti_square = myarray[i][j].activating_Square_;
+            myarray[i][j].setBackground(myarray[i][j].original_color);
+            myarray[i][j].setBackground(myarray[i][j].original_color);
+            acti_square.setBackground(Color.CYAN);
+            myarray[i][j].activating_piece = null;
+            myarray[i][j].activating_Square_ = null;
+            myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());
+            myarray[i][j].text_activateable=Boolean.TRUE;
+            //switch_player(myarray);
+            //acti_square.activateable=null;
+            //acti_square.text_activateable=null;
+
+
+        }
+
+
+            //special_update_board(myarray);
+
+        }
+
 
 
 

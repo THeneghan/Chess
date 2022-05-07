@@ -250,7 +250,7 @@ public class VirtualSquare {
 
                 if (more_than_0y >= 0) {
                     if (myarray[orig_y - i][orig_x].piece_color != null) {
-                        if (myarray[orig_y - 1][orig_x].piece_color == opp_colour) {
+                        if (myarray[orig_y - i][orig_x].piece_color == opp_colour) {
                             activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,Colour);
                             break;
                         }
@@ -558,24 +558,19 @@ public class VirtualSquare {
 
     }
 
-    public static void selfcheck(VirtualSquare[][] myarray, VirtualSquare piece) {
+    public static Integer[] selfcheck(VirtualSquare[][] myarray, VirtualSquare piece) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (myarray[i][j].Background==Color.pink) {
-                    System.out.println("pinker");
-                    System.out.println(myarray[i][j].alge_notation);
-                }
-            }}
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
-                    System.out.println("Black is in self check");
+                    Integer[] wipes = {piece.y, piece.x};
                     update_board(myarray);
+                    return wipes;
                 }
             }}
         update_board(myarray);
+        Integer[] dump ={-1,-1};
+        return dump;
     }
 
 
@@ -586,14 +581,12 @@ public class VirtualSquare {
 
 
     public void pink_square(VirtualSquare[][] myarray, VirtualSquare piece){
-        System.out.println("Activating piece is");
-        System.out.println(piece.activating_Square_.alge_notation);
+
         piece.Text=(piece.activating_piece);
         piece.piece_color=piece_color_func(piece.Text);
         piece.Background=(piece.original_color);
         piece.activating_Square_.Text=null;
-        System.out.println("text check should be null");
-        System.out.println(piece.activating_Square_.Text);
+
         piece.activating_piece=null;
         piece.activating_Square_=(null);
 

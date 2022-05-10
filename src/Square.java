@@ -235,7 +235,7 @@ public class Square extends JButton {
                 }
             }
 
-            self_check_stopper(myarray);
+            self_check_stopper(myarray, colour);
 
         } else {
             pink_square(myarray, this);
@@ -645,7 +645,6 @@ public class Square extends JButton {
 
     }
 
-
     public void virtual_board_check(Square[][] myarray) {
         VirtualSquare[][] virt_array = new VirtualSquare[8][8];
         for (int i = 0; i < 8; i++) {
@@ -663,7 +662,7 @@ public class Square extends JButton {
     }
 
 
-    public void self_check_stopper(Square[][] myarray) {
+    public void self_check_stopper(Square[][] myarray, String color) {
         VirtualSquare[][] virt_array = new VirtualSquare[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -696,7 +695,7 @@ public class Square extends JButton {
                     for (int i1 = 0; i1 < 8; i1++) {
                         for (int j1 = 0; j1 < 8; j1++) {
                             VirtualSquare mysquare = copy_virtualarray[i1][j1];
-                            wipe_pink(myarray,VirtualSquare.selfcheck(copy_virtualarray,mysquare),i,j);
+                            wipe_pink(myarray,VirtualSquare.selfcheck(copy_virtualarray,mysquare, color),i,j);
                         }
                     }
                 }

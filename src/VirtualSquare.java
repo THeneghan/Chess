@@ -549,23 +549,33 @@ public class VirtualSquare {
 
     }
 
-    public static void self_check_loop1(VirtualSquare[][] myarray) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                VirtualSquare mysquare = myarray[i][j];
-                selfcheck(myarray,mysquare);
-            }}
+//    public static void self_check_loop1(VirtualSquare[][] myarray) {
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                VirtualSquare mysquare = myarray[i][j];
+//                selfcheck(myarray,mysquare, colour);
+//            }}
+//
+//    }
 
-    }
-
-    public static Integer[] selfcheck(VirtualSquare[][] myarray, VirtualSquare piece) {
+    public static Integer[] selfcheck(VirtualSquare[][] myarray, VirtualSquare piece, String colour) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
+                if (colour == "Black") {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
                     Integer[] wipes = {piece.y, piece.x};
                     update_board(myarray);
                     return wipes;
+                }
+            }
+            else if(colour == "White") {
+                    if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
+                        Integer[] wipes = {piece.y, piece.x};
+                        update_board(myarray);
+                        return wipes;
+                    }
+
                 }
             }}
         update_board(myarray);

@@ -121,7 +121,7 @@ public class Square extends JButton {
 
     }
 
-    public void clean_board(Square[][] myarray) {
+    public static void clean_board(Square[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -138,7 +138,7 @@ public class Square extends JButton {
 
     }
 
-    public void switch_player(Square[][] myarray, Square piece) {
+    public static void switch_player(Square[][] myarray, Square piece) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 myarray[i][j].setBackground(myarray[i][j].original_color);
@@ -743,7 +743,8 @@ public class Square extends JButton {
             Square acti_square = myarray[i][j].activating_Square_;
             myarray[i][j].setBackground(myarray[i][j].original_color);
             myarray[i][j].setBackground(myarray[i][j].original_color);
-            acti_square.setBackground(Color.CYAN);
+            if (acti_square != null) {
+            acti_square.setBackground(Color.CYAN);}
             myarray[i][j].activating_piece = null;
             myarray[i][j].activating_Square_ = null;
             myarray[i][j].piece_color = piece_color_func(myarray[i][j].getText());

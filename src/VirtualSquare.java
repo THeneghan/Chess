@@ -148,9 +148,10 @@ public class VirtualSquare {
                 }
                 if (this.alge_notation.contains("7")) {
                     for (int i = this.y-1; i >= this.y-2; i = i - 1) {
-                        if (myarray[i][this.x].piece_color!="White") {
+                        if (myarray[i][this.x].piece_color==null) {
                             activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u265F ");
                         }
+                        else {break;}
                     }
                 }
                 else {
@@ -186,7 +187,7 @@ public class VirtualSquare {
                     }
                 } else {
                     for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
-                        if (i==8 | myarray[i][this.x].piece_color == "White"  ) {break;}
+                        if (i==8) {break;} // | myarray[i][this.x].piece_color == "White"
 
                         if (myarray[i][this.x].piece_color != "Black") {
                             activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");

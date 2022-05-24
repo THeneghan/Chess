@@ -189,7 +189,7 @@ public class VirtualSquare {
                     for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
                         if (i==8) {break;} // | myarray[i][this.x].piece_color == "White"
 
-                        if (myarray[i][this.x].piece_color != "Black") {
+                        if (myarray[i][this.x].piece_color == null) {
                             activate_square_pink(myarray, i,this.x,orig_y,orig_x,"\u2659 ");
                         }
                     }

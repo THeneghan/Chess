@@ -130,8 +130,6 @@ public class Square extends JButton {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-
-
                     HashMap<String,String > starting_board1= starting_positions();
                     for (int i = 0; i < 8; i++) {
                         for (int j = 0; j < 8; j++) {
@@ -299,7 +297,7 @@ public class Square extends JButton {
                             break;
                         }
 
-                        if (myarray[i][this.x].piece_color != "Black") {
+                        if (myarray[i][this.x].piece_color == null) {
                             activate_square_pink(myarray, i, this.x, orig_y, orig_x, "\u2659 ");
                         }
                     }

@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -115,7 +117,52 @@ public class Square extends JButton {
         System.out.println(counter);
         if (counter==0) {
             System.out.println("CHECKMATE");
-            System.exit(0);
+            JFrame parent = new JFrame("Checkmate");
+            parent.setSize(300,300);
+            parent.setLayout(new FlowLayout(FlowLayout.CENTER));
+            JPanel panel1 = new JPanel();
+            JButton button1 = new JButton();
+            JButton button2 = new JButton();
+            button1.setText("Click me to play again!");
+            button1.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+
+
+                    HashMap<String,String > starting_board1= starting_positions();
+                    for (int i = 0; i < 8; i++) {
+                        for (int j = 0; j < 8; j++) {
+                            String key = myarray[i][j].alge_notation;
+                            String chess_piece = starting_board1.get(key);
+                            myarray[i][j].setText(chess_piece);
+                            myarray[i][j].piece_color = Square.piece_color_func(myarray[i][j].getText());
+                            if (Objects.equals(myarray[i][j].piece_color, "White")) {
+                                myarray[i][j].activateable = Boolean.TRUE;
+                            } else if (Objects.equals(myarray[i][j].piece_color, "Black")) {
+                                myarray[i][j].activateable = Boolean.FALSE;
+                            }
+                        }}
+                    //myarray
+
+
+               parent.dispose(); }
+            }
+            );
+            button2.setText("Click me to quit!");
+            button2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+            panel1.add(button1);
+            panel1.add(button2);
+            parent.add(panel1);
+            parent.pack();
+            parent.setVisible(true);
+
+            //System.exit(0);
         }
         clean_board(myarray);
 

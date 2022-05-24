@@ -525,29 +525,35 @@ public class VirtualSquare {
         }
     }
 
-    public static void check(VirtualSquare[][] myarray, VirtualSquare piece) {
+    public static Boolean check(VirtualSquare[][] myarray, VirtualSquare piece) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
                     System.out.println("Black is in check");
                     update_board(myarray);
+                    return Boolean.TRUE;
                 }
                 else if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
                     System.out.println("White is in check");
                     update_board(myarray);
+                    return Boolean.TRUE;
                 }
             }}
         update_board(myarray);
+        return Boolean.FALSE;
     }
 
-    public static void check_loop(VirtualSquare[][] myarray) {
+    public static Boolean check_loop(VirtualSquare[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 VirtualSquare mysquare = myarray[i][j];
-                check(myarray,mysquare);
+                Boolean val = check(myarray,mysquare);
+                if (val == Boolean.TRUE) {
+                    return Boolean.TRUE;
+                }
             }}
-
+    return Boolean.FALSE;
     }
 
 //    public static void self_check_loop1(VirtualSquare[][] myarray) {

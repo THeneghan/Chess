@@ -95,12 +95,12 @@ public class Square extends JButton {
         piece.activating_piece = null;
         piece.activating_Square_ = null;
         switch_player(myarray,piece);
-        virtual_board_check(myarray);
+        Boolean val = virtual_board_check(myarray);
         //New addition
-        checkmate_check(myarray, piece);
+        checkmate_check(myarray, piece, val);
     }
 
-    public void checkmate_check(Square[][] myarray, Square piece) {
+    public void checkmate_check(Square[][] myarray, Square piece, Boolean val) {
         Integer counter=0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -115,11 +115,12 @@ public class Square extends JButton {
 
             }}
         System.out.println(counter);
-        if (counter==0) {
-            System.out.println("CHECKMATE");
+        if (counter==0 && val == Boolean.TRUE) {
             JFrame parent = new JFrame("Checkmate");
             parent.setSize(300,300);
             parent.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+
             String winner = piece_color + " " + "wins";
             JLabel label1 = new JLabel(winner);
             JPanel panel1 = new JPanel();
@@ -162,10 +163,64 @@ public class Square extends JButton {
             //panel1.add(label1);
             parent.add(panel1);
             parent.pack();
+
             parent.setVisible(true);
 
             //System.exit(0);
         }
+
+        else if (counter==0 && val == Boolean.FALSE) {
+            JFrame parent = new JFrame("Stalemate");
+            parent.setSize(300,300);
+            parent.setLayout(new FlowLayout(FlowLayout.CENTER));
+            String winner = "Stalemate";
+            JLabel label1 = new JLabel(winner);
+            JPanel panel1 = new JPanel();
+            JButton button1 = new JButton();
+            JButton button2 = new JButton();
+            button1.setText("Click me to play again!");
+            button1.addActionListener(new ActionListener() {
+                                          @Override
+                                          public void actionPerformed(ActionEvent e) {
+
+                                              HashMap<String,String > starting_board1= starting_positions();
+                                              for (int i = 0; i < 8; i++) {
+                                                  for (int j = 0; j < 8; j++) {
+                                                      String key = myarray[i][j].alge_notation;
+                                                      String chess_piece = starting_board1.get(key);
+                                                      myarray[i][j].setText(chess_piece);
+                                                      myarray[i][j].piece_color = Square.piece_color_func(myarray[i][j].getText());
+                                                      if (Objects.equals(myarray[i][j].piece_color, "White")) {
+                                                          myarray[i][j].activateable = Boolean.TRUE;
+                                                      } else if (Objects.equals(myarray[i][j].piece_color, "Black")) {
+                                                          myarray[i][j].activateable = Boolean.FALSE;
+                                                      }
+                                                  }}
+                                              //myarray
+
+
+                                              parent.dispose(); }
+                                      }
+            );
+            button2.setText("Click me to quit!");
+            button2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.exit(0);
+                }
+            });
+            parent.add(label1);
+            panel1.add(button1);
+            panel1.add(button2);
+            //panel1.add(label1);
+            parent.add(panel1);
+            parent.pack();
+
+            parent.setVisible(true);
+
+            //System.exit(0);
+        }
+
         clean_board(myarray);
 
     }
@@ -725,7 +780,7 @@ public class Square extends JButton {
 
     }
 
-    public void virtual_board_check(Square[][] myarray) {
+    public Boolean virtual_board_check(Square[][] myarray) {
         VirtualSquare[][] virt_array = new VirtualSquare[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -736,7 +791,11 @@ public class Square extends JButton {
                 virt_array[i][j] = virt_square;
             }
         }
-        VirtualSquare.check_loop(virt_array);
+        Boolean val = VirtualSquare.check_loop(virt_array);
+        if (val==Boolean.TRUE) {
+            return Boolean.TRUE;
+        }
+        else {return Boolean.FALSE;}
 
 
     }

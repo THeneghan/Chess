@@ -1,6 +1,10 @@
 import java.awt.*;
 import java.util.Objects;
 
+/** This class creates the VirtualSquare object and required methods. It is almost identical to the Square object
+ * but is not extended from the JButton as it is only used for check searches */
+
+
 public class VirtualSquare {
     Integer y;
     Integer x;
@@ -59,11 +63,11 @@ public class VirtualSquare {
             Integer orig_y = this.y;
 
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer less_than_8x=orig_x+i;
+                int less_than_8y=orig_y+i;
+                int less_than_8x=orig_x+i;
                 if (less_than_8y < 8 && less_than_8x <8){
                     if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x+i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                             break;
                         }
@@ -75,13 +79,13 @@ public class VirtualSquare {
 
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x=orig_x+i;
+                int less_than_8x=orig_x+i;
 
-                Integer more_than_0y = orig_y-i;
+                int more_than_0y = orig_y-i;
 
                 if (less_than_8x < 8 && more_than_0y >=0){
                     if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x+i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
 
                             break;
@@ -94,14 +98,14 @@ public class VirtualSquare {
             }
             for (int i = 1; i <= 8; i = i + 1) {
 
-                Integer more_than_0x = orig_x-i;
-                Integer more_than_0y = orig_y-i;
+                int more_than_0x = orig_x-i;
+                int more_than_0y = orig_y-i;
 
                 if (more_than_0x >= 0 && more_than_0y >=0){
 
                     if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
 
-                        if (myarray[orig_y-i][orig_x-i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
                         }
                         break;}
@@ -109,11 +113,11 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer more_than_0x = orig_x-i;
+                int less_than_8y=orig_y+i;
+                int more_than_0x = orig_x-i;
                 if (less_than_8y < 8 && more_than_0x >=0){
                     if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x-i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);
                         }
                         break;
@@ -132,7 +136,7 @@ public class VirtualSquare {
             Integer orig_x = this.x;
             Integer orig_y = this.y;
 
-            if (colour == "Black") {
+            if (Objects.equals(colour, "Black")) {
 
                 for (int i = this.y-1; i >= this.y-1; i = i - 1) {
                     if (i+1==0) {break;}
@@ -142,7 +146,7 @@ public class VirtualSquare {
                         activate_square_pink(myarray, i,this.x-1,orig_y,orig_x,"\u265F ");
                     }
 
-                    if (this.x +1<8 && (myarray[i][this.x+1].piece_color=="White")) {
+                    if (this.x +1<8 && (Objects.equals(myarray[i][this.x + 1].piece_color, "White"))) {
                         activate_square_pink(myarray, i,this.x+1,orig_y,orig_x,"\u265F ");
                     }
                 }
@@ -164,17 +168,17 @@ public class VirtualSquare {
 
                 }}
 
-            else if(colour == "White") {
+            else if(Objects.equals(colour, "White")) {
 
                 for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
                     if (i==8) {break;}
-                    if (this.x - 1 >= 0 && (myarray[i][this.x - 1].piece_color == "Black")) {
+                    if (this.x - 1 >= 0 && (Objects.equals(myarray[i][this.x - 1].piece_color, "Black"))) {
                         activate_square_pink(myarray, i,this.x-1,orig_y,orig_x,"\u2659 ");
                     }
                 }
                 for (int i = this.y + 1; i <= this.y + 1; i = i + 1) {
                     if (i==8) {break;}
-                    if (this.x + 1 < 8 && (myarray[i][this.x + 1].piece_color == "Black")) {
+                    if (this.x + 1 < 8 && (Objects.equals(myarray[i][this.x + 1].piece_color, "Black"))) {
                         activate_square_pink(myarray, i,this.x+1,orig_y,orig_x,"\u2659 ");
                     }
                 }
@@ -209,10 +213,10 @@ public class VirtualSquare {
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y = orig_y + i;
+                int less_than_8y = orig_y + i;
                 if (less_than_8y < 8) {
                     if (myarray[orig_y + i][orig_x].piece_color != null) {
-                        if (myarray[orig_y + i][orig_x].piece_color == opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,Colour);
                             break;
                         }
@@ -222,10 +226,10 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x = orig_x + i;
+                int less_than_8x = orig_x + i;
                 if (less_than_8x < 8) {
                     if (myarray[orig_y][orig_x + i].piece_color != null) {
-                        if (myarray[orig_y][orig_x + i].piece_color == opp_colour) {
+                        if (Objects.equals(myarray[orig_y][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,Colour);
                             break;
                         }
@@ -235,10 +239,10 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer more_than_0x = orig_x - i;
+                int more_than_0x = orig_x - i;
                 if (more_than_0x >= 0) {
                     if (myarray[orig_y][orig_x - i].piece_color != null) {
-                        if (myarray[orig_y][orig_x - i].piece_color == opp_colour) {
+                        if (Objects.equals(myarray[orig_y][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,Colour);
                         }
                         break;
@@ -247,11 +251,11 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer more_than_0y = orig_y - i;
+                int more_than_0y = orig_y - i;
 
                 if (more_than_0y >= 0) {
                     if (myarray[orig_y - i][orig_x].piece_color != null) {
-                        if (myarray[orig_y - i][orig_x].piece_color == opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,Colour);
                             break;
                         }
@@ -271,28 +275,28 @@ public class VirtualSquare {
             update_board(myarray);
             Integer orig_x = this.x;
             Integer orig_y = this.y;
-            if (orig_y+2 <= 7 && orig_x+1 <= 7 && myarray[orig_y+2][orig_x+1].piece_color!=opp_colour) {
+            if (orig_y+2 <= 7 && orig_x+1 <= 7 && !Objects.equals(myarray[orig_y + 2][orig_x + 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+2,orig_x+1,orig_y,orig_x,Colour);
             }
-            if (orig_y+2 <= 7 && orig_x-1 >= 0 && myarray[orig_y+2][orig_x-1].piece_color!=opp_colour) {
+            if (orig_y+2 <= 7 && orig_x-1 >= 0 && !Objects.equals(myarray[orig_y + 2][orig_x - 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+2,orig_x-1,orig_y,orig_x,Colour);
             }
-            if (orig_y-2 >= 0 && orig_x+1 <= 7 && myarray[orig_y-2][orig_x+1].piece_color!=opp_colour) {
+            if (orig_y-2 >= 0 && orig_x+1 <= 7 && !Objects.equals(myarray[orig_y - 2][orig_x + 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-2,orig_x+1,orig_y,orig_x,Colour);
             }
-            if (orig_y-2 >= 0 && orig_x-1 >= 0 && myarray[orig_y-2][orig_x-1].piece_color!=opp_colour) {
+            if (orig_y-2 >= 0 && orig_x-1 >= 0 && !Objects.equals(myarray[orig_y - 2][orig_x - 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-2,orig_x-1,orig_y,orig_x,Colour);
             }
-            if (orig_y+1 <= 7 && orig_x+2 <= 7 && myarray[orig_y+1][orig_x+2].piece_color!=opp_colour) {
+            if (orig_y+1 <= 7 && orig_x+2 <= 7 && !Objects.equals(myarray[orig_y + 1][orig_x + 2].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+1,orig_x+2,orig_y,orig_x,Colour);
             }
-            if (orig_y-1 >= 0 && orig_x+2 <= 7 && myarray[orig_y-1][orig_x+2].piece_color!=opp_colour) {
+            if (orig_y-1 >= 0 && orig_x+2 <= 7 && !Objects.equals(myarray[orig_y - 1][orig_x + 2].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-1,orig_x+2,orig_y,orig_x,Colour);
             }
-            if (orig_y+1 <= 7 && orig_x-2 >= 0 && myarray[orig_y+1][orig_x-2].piece_color!=opp_colour) {
+            if (orig_y+1 <= 7 && orig_x-2 >= 0 && !Objects.equals(myarray[orig_y + 1][orig_x - 2].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+1,orig_x-2,orig_y,orig_x,Colour);
             }
-            if (orig_y-1 >= 0 && orig_x-2 >= 0 && myarray[orig_y-1][orig_x-2].piece_color!=opp_colour) {
+            if (orig_y-1 >= 0 && orig_x-2 >= 0 && !Objects.equals(myarray[orig_y - 1][orig_x - 2].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-1,orig_x-2,orig_y,orig_x,Colour);
             }}
 
@@ -306,11 +310,11 @@ public class VirtualSquare {
             Integer orig_x = this.x;
             Integer orig_y = this.y;
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer less_than_8x=orig_x+i;
+                int less_than_8y=orig_y+i;
+                int less_than_8x=orig_x+i;
                 if (less_than_8y < 8 && less_than_8x <8){
                     if (myarray[orig_y+i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x+i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x+i,orig_y,orig_x,colour);
                             break;
                         }
@@ -322,12 +326,12 @@ public class VirtualSquare {
 
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x=orig_x+i;
-                Integer more_than_0y = orig_y-i;
+                int less_than_8x=orig_x+i;
+                int more_than_0y = orig_y-i;
 
                 if (less_than_8x < 8 && more_than_0y >=0){
                     if (myarray[orig_y-i][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x+i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x+i,orig_y,orig_x,colour);
                             break;
                         }
@@ -339,13 +343,13 @@ public class VirtualSquare {
             }
             for (int i = 1; i <= 8; i = i + 1) {
 
-                Integer more_than_0x = orig_x-i;
-                Integer more_than_0y = orig_y-i;
+                int more_than_0x = orig_x-i;
+                int more_than_0y = orig_y-i;
 
                 if (more_than_0x >= 0 && more_than_0y >=0){
 
                     if (myarray[orig_y-i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x-i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x-i,orig_y,orig_x,colour);
                             //break;
                         }
@@ -355,11 +359,11 @@ public class VirtualSquare {
 
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
-                Integer more_than_0x = orig_x-i;
+                int less_than_8y=orig_y+i;
+                int more_than_0x = orig_x-i;
                 if (less_than_8y < 8 && more_than_0x >=0){
                     if (myarray[orig_y+i][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x-i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x-i,orig_y,orig_x,colour);}
                         break;
                     }
@@ -369,10 +373,10 @@ public class VirtualSquare {
             }
 
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8y=orig_y+i;
+                int less_than_8y=orig_y+i;
                 if (less_than_8y < 8){
                     if (myarray[orig_y+i][orig_x].piece_color!=null) {
-                        if (myarray[orig_y+i][orig_x].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y + i][orig_x].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y+i,orig_x,orig_y,orig_x,colour);
                             break;
                         }
@@ -381,10 +385,10 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer less_than_8x=orig_x+i;
+                int less_than_8x=orig_x+i;
                 if (less_than_8x < 8){
                     if (myarray[orig_y][orig_x+i].piece_color!=null) {
-                        if (myarray[orig_y][orig_x+i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y][orig_x + i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y,orig_x+i,orig_y,orig_x,colour);
                             break;}
                         break;}
@@ -392,10 +396,10 @@ public class VirtualSquare {
                 }
             }
             for (int i = 1; i <= 8; i = i + 1) {
-                Integer more_than_0x = orig_x-i;
+                int more_than_0x = orig_x-i;
                 if (more_than_0x >= 0){
                     if (myarray[orig_y][orig_x-i].piece_color!=null) {
-                        if (myarray[orig_y][orig_x-i].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y][orig_x - i].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y,orig_x-i,orig_y,orig_x,colour);
                         }
                         break;}
@@ -404,12 +408,12 @@ public class VirtualSquare {
             }
             for (int i = 1; i <= 8; i = i + 1) {
 
-                Integer more_than_0y = orig_y-i;
+                int more_than_0y = orig_y-i;
 
                 if (more_than_0y >= 0){
 
                     if (myarray[orig_y-i][orig_x].piece_color!=null) {
-                        if (myarray[orig_y-i][orig_x].piece_color==opp_colour) {
+                        if (Objects.equals(myarray[orig_y - i][orig_x].piece_color, opp_colour)) {
                             activate_square_pink(myarray, orig_y-i,orig_x,orig_y,orig_x,colour);
                             break;
                         }
@@ -427,56 +431,56 @@ public class VirtualSquare {
         update_board(myarray);
         Integer orig_x = this.x;
         Integer orig_y = this.y;
-        Integer less_than_8y=orig_y+1;
-        Integer less_than_8x=orig_x+1;
-        Integer more_than_0x = orig_x-1;
-        Integer more_than_0y = orig_y-1;
+        int less_than_8y=orig_y+1;
+        int less_than_8x=orig_x+1;
+        int more_than_0x = orig_x-1;
+        int more_than_0y = orig_y-1;
         if (less_than_8y < 8 && less_than_8x <8){
-            if (myarray[orig_y+1][orig_x+1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y + 1][orig_x + 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+1,orig_x+1,orig_y,orig_x,Colour);
             }}
 
 
         if (less_than_8x < 8 && more_than_0y >=0){
-            if (myarray[orig_y-1][orig_x+1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y - 1][orig_x + 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-1,orig_x+1,orig_y,orig_x,Colour);
             }
         }
 
         if (more_than_0x >= 0 && more_than_0y >=0){
 
-            if (myarray[orig_y-1][orig_x-1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y - 1][orig_x - 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-1,orig_x-1,orig_y,orig_x,Colour);
             }
 
         }
 
         if (less_than_8y < 8 && more_than_0x >=0){
-            if (myarray[orig_y+1][orig_x-1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y + 1][orig_x - 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+1,orig_x-1,orig_y,orig_x,Colour);
             }}
 
         if (less_than_8y < 8){
-            if (myarray[orig_y+1][orig_x].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y + 1][orig_x].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y+1,orig_x,orig_y,orig_x,Colour);
             }
 
         }
 
         if (less_than_8x < 8){
-            if (myarray[orig_y][orig_x+1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y][orig_x + 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y,orig_x+1,orig_y,orig_x,Colour);
             }
 
         }
         if (more_than_0x >= 0){
-            if (myarray[orig_y][orig_x-1].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y][orig_x - 1].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y,orig_x-1,orig_y,orig_x,Colour);
             }
         }
 
         if (more_than_0y >= 0){
-            if (myarray[orig_y-1][orig_x].piece_color!=opp_colour) {
+            if (!Objects.equals(myarray[orig_y - 1][orig_x].piece_color, opp_colour)) {
                 activate_square_pink(myarray, orig_y-1,orig_x,orig_y,orig_x,Colour);
             }
 
@@ -525,17 +529,16 @@ public class VirtualSquare {
         }
     }
 
+    //If check found return True, otherwise return False
     public static Boolean check(VirtualSquare[][] myarray, VirtualSquare piece) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
-                    System.out.println("Black is in check");
                     update_board(myarray);
                     return Boolean.TRUE;
                 }
                 else if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
-                    System.out.println("White is in check");
                     update_board(myarray);
                     return Boolean.TRUE;
                 }
@@ -543,7 +546,7 @@ public class VirtualSquare {
         update_board(myarray);
         return Boolean.FALSE;
     }
-
+    //Loops through all pieces on the board to find any checks.
     public static Boolean check_loop(VirtualSquare[][] myarray) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -556,27 +559,18 @@ public class VirtualSquare {
     return Boolean.FALSE;
     }
 
-//    public static void self_check_loop1(VirtualSquare[][] myarray) {
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                VirtualSquare mysquare = myarray[i][j];
-//                selfcheck(myarray,mysquare, colour);
-//            }}
-//
-//    }
-
     public static Integer[] selfcheck(VirtualSquare[][] myarray, VirtualSquare piece, String colour) {
         outp(myarray, piece);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (colour == "Black") {
+                if (Objects.equals(colour, "Black")) {
                 if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u265A ")){
                     Integer[] wipes = {piece.y, piece.x};
                     update_board(myarray);
                     return wipes;
                 }
             }
-            else if(colour == "White") {
+            else if(Objects.equals(colour, "White")) {
                     if (myarray[i][j].Background==Color.pink && Objects.equals(myarray[i][j].Text, "\u2654 ")){
                         Integer[] wipes = {piece.y, piece.x};
                         update_board(myarray);
@@ -586,15 +580,8 @@ public class VirtualSquare {
                 }
             }}
         update_board(myarray);
-        Integer[] dump ={-1,-1};
-        return dump;
+        return new Integer[]{-1,-1};
     }
-
-
-
-
-
-
 
 
     public void pink_square(VirtualSquare[][] myarray, VirtualSquare piece){
